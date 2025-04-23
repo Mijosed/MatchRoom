@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@nuxtjs/leaflet": "^1.2.6",
+    "@nuxt/ui": "^3.0.2",
     "@nuxtjs/supabase": "^1.5.0",
+    "@nuxtjs/tailwindcss": "^6.13.2",
     "nuxt": "^3.16.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"

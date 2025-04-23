@@ -3,7 +3,7 @@
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: { enabled: true },
-    modules: ['@nuxtjs/supabase', '@nuxtjs/leaflet'],
+    modules: ['@nuxtjs/supabase', '@nuxtjs/leaflet','@nuxtjs/tailwindcss'],
     build: {
         transpile: ['@supabase/ssr', 'cookie']
     },
