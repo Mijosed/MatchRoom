@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Bienvenue à notre hôtel</h1>
+        <h1 class="text-2xl font-bold text-red-600 mb-4">Bienvenue à notre hôtel</h1>
         <p>Nous sommes heureux de vous accueillir !</p>
         <button @click="navigateTo('/hotel')">Voir notre hôtel</button>
         <button @click="navigateTo('/admin')">Voir la page admin</button>
