@@ -7,15 +7,8 @@
       </div>
     </div>
 
-    <!-- Filtres et résultats -->
-    <div class="grid grid-cols-12 gap-6">
-      <!-- Filtres -->
-      <div class="col-span-3 space-y-4">
-        <!-- Ajouter vos filtres ici -->
-      </div>
 
-      <!-- Résultats -->
-      <div class="col-span-9">
+      <div class="w-full">
         <div v-if="loading" class="text-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
           <p class="mt-2 text-gray-600">Chargement des résultats...</p>
@@ -37,23 +30,22 @@
           </button>
         </div>
         
-        <div v-else class="grid gap-4">
+        <div v-else class="grid gap-6">
           <p class="text-gray-600 mb-4">
             {{ results.length }} hôtel{{ results.length > 1 ? 's' : '' }} trouvé{{ results.length > 1 ? 's' : '' }}
           </p>
-          <HotelCard 
+          <ResultCardHotel 
             v-for="hotel in results" 
             :key="hotel.id" 
             :hotel="hotel"
           />
         </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import HotelCard from '~/components/common/HotelCard.vue'
+import ResultCardHotel from '~/components/common/resultCardHotel.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -62,38 +54,55 @@ const { search } = useSearch()
 const loading = ref(true)
 const results = ref([])
 
-// Récupérer les paramètres de l'URL
-const city = route.query.city?.split(',')[0] ?? ''
-const region = route.query.startDate?.split(',')[1] ?? ''
+// Fonction pour charger les résultats
+const loadResults = async () => {
+  loading.value = true
+  try {
+    // Extraire la ville de l'URL
+    const city = route.query.city?.split(',')[0] ?? ''
+    
+    if (!city) {
+      results.value = []
+      return
+    }
 
-const searchParams = {
-  city: city,
-  region: region,
-  startDate: route.query.startDate,
-  endDate: route.query.endDate,
-  flexibility: Number(route.query.flexibility),
-  adults: Number(route.query.adults),
-  children: Number(route.query.children),
-  babies: Number(route.query.babies),
-  pets: Number(route.query.pets)
+    const searchParams = {
+      city,
+      startDate: route.query.startDate,
+      endDate: route.query.endDate,
+      flexibility: Number(route.query.flexibility),
+      adults: Number(route.query.adults),
+      children: Number(route.query.children),
+      babies: Number(route.query.babies),
+      pets: Number(route.query.pets)
+    }
+    
+    results.value = await search(searchParams)
+  } catch (error) {
+    console.error('Erreur lors de la recherche:', error)
+    results.value = []
+  } finally {
+    loading.value = false
+  }
 }
 
 // Formater le résumé de recherche
 const searchSummary = computed(() => {
-  if (!searchParams.city) return ''
+  const city = route.query.city?.split(',')[0] ?? ''
+  if (!city) return ''
   
-  const dates = searchParams.startDate && searchParams.endDate
-    ? `du ${new Date(searchParams.startDate).toLocaleDateString()} au ${new Date(searchParams.endDate).toLocaleDateString()}`
+  const dates = route.query.startDate && route.query.endDate
+    ? `du ${new Date(route.query.startDate).toLocaleDateString()} au ${new Date(route.query.endDate).toLocaleDateString()}`
     : ''
     
   const travelers = [
-    searchParams.adults && `${searchParams.adults} adulte${searchParams.adults > 1 ? 's' : ''}`,
-    searchParams.children && `${searchParams.children} enfant${searchParams.children > 1 ? 's' : ''}`,
-    searchParams.babies && `${searchParams.babies} bébé${searchParams.babies > 1 ? 's' : ''}`,
-    searchParams.pets && `${searchParams.pets} animal${searchParams.pets > 1 ? 'aux' : ''}`
+    Number(route.query.adults) > 0 && `${route.query.adults} adulte${Number(route.query.adults) > 1 ? 's' : ''}`,
+    Number(route.query.children) > 0 && `${route.query.children} enfant${Number(route.query.children) > 1 ? 's' : ''}`,
+    Number(route.query.babies) > 0 && `${route.query.babies} bébé${Number(route.query.babies) > 1 ? 's' : ''}`,
+    Number(route.query.pets) > 0 && `${route.query.pets} animal${Number(route.query.pets) > 1 ? 'aux' : ''}`
   ].filter(Boolean).join(', ')
 
-  return [city,region, dates, travelers].filter(Boolean).join(' - ')
+  return [city, dates, travelers].filter(Boolean).join(' - ')
 })
 
 // Fonction pour réinitialiser la recherche
@@ -101,22 +110,14 @@ const resetSearch = () => {
   router.push('/')
 }
 
+// Surveiller les changements de route
+watch(
+  () => route.fullPath,
+  () => loadResults()
+)
+
 // Charger les résultats au montage
-onMounted(async () => {
-  try {
-    if (!searchParams.city) {
-      results.value = []
-      return
-    }
-    
-    console.log('Appel API avec params:', searchParams)
-    results.value = await search(searchParams)
-    console.log('Résultats reçus:', results.value)
-  } catch (error) {
-    console.error('Erreur lors de la recherche:', error)
-    results.value = []
-  } finally {
-    loading.value = false
-  }
+onMounted(() => {
+  loadResults()
 })
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="relative">
-    <!-- Barre de recherche -->
     <div 
       class="bg-white rounded-full shadow-sm px-4 py-2 flex items-center gap-2 cursor-pointer"
       @click="openModal"
@@ -14,14 +13,12 @@
       />
     </div>
 
-    <!-- Modal de recherche -->
     <div v-if="isModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="closeModal"></div>
 
-      <!-- Modal -->
+
       <div class="relative min-h-screen flex items-center justify-center p-4">
         <div class="relative bg-white rounded-lg w-full max-w-2xl p-6">
-          <!-- Header -->
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-semibold">
               {{ 
@@ -33,9 +30,7 @@
             <button @click="closeModal" class="text-gray-400 hover:text-gray-500">×</button>
           </div>
 
-          <!-- Étape recherche -->
           <div v-if="currentStep === 'search'">
-            <!-- Search input -->
             <div class="mb-6">
               <div class="flex items-center gap-2 border border-gray-300 rounded-lg p-3">
                 <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
@@ -53,7 +48,6 @@
                 />
               </div>
 
-              <!-- Recherches récentes -->
               <div v-if="recentSearches.length > 0" class="mt-2">
                 <div class="text-sm text-gray-500 mb-2">Recherches récentes :</div>
                 <div class="flex flex-wrap gap-2">
@@ -74,7 +68,6 @@
                 </div>
               </div>
               
-              <!-- Suggestions -->
               <div v-if="showSuggestions && filteredSuggestions.length > 0" class="mt-4">
                 <div class="text-sm text-gray-500 mb-2">Suggestions :</div>
                 <ul class="border rounded-lg divide-y">
@@ -99,7 +92,6 @@
               </div>
             </div>
 
-            <!-- Results -->
             <div v-if="hasSearched" class="max-h-[400px] overflow-y-auto">
               <div v-if="!results.length" class="text-center py-8 text-gray-500">
                 Aucun hôtel ne correspond à votre recherche
@@ -122,9 +114,7 @@
             </div>
           </div>
 
-          <!-- Étape calendrier -->
           <div v-else-if="currentStep === 'calendar'" class="space-y-4">
-            <!-- Ville sélectionnée -->
             <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
               <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-500" />
               <span class="font-medium">{{ selectedCity }}</span>
@@ -136,7 +126,6 @@
               </button>
             </div>
 
-            <!-- Sélecteur de dates -->
             <div class="flex gap-4">
               <div class="flex-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Arrivée</label>
@@ -158,7 +147,6 @@
               </div>
             </div>
 
-            <!-- Options de flexibilité -->
             <div class="border-t pt-4">
               <h3 class="text-sm font-medium text-gray-700 mb-2">Flexibilité</h3>
               <div class="flex gap-2">
@@ -178,7 +166,6 @@
               </div>
             </div>
 
-            <!-- Bouton de recherche -->
             <div class="mt-6">
               <button 
                 class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -190,9 +177,7 @@
             </div>
           </div>
 
-          <!-- Étape voyageurs -->
           <div v-else-if="currentStep === 'travelers'" class="space-y-4">
-            <!-- Résumé des sélections précédentes -->
             <div class="space-y-2">
               <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                 <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-500" />
@@ -216,9 +201,7 @@
               </div>
             </div>
 
-            <!-- Sélecteur de voyageurs -->
             <div class="space-y-4">
-              <!-- Adultes -->
               <div class="flex items-center justify-between p-4 border-b">
                 <div>
                   <h3 class="font-medium">Adultes</h3>
@@ -242,7 +225,6 @@
                 </div>
               </div>
 
-              <!-- Enfants -->
               <div class="flex items-center justify-between p-4 border-b">
                 <div>
                   <h3 class="font-medium">Enfants</h3>
@@ -266,7 +248,6 @@
                 </div>
               </div>
 
-              <!-- Bébés -->
               <div class="flex items-center justify-between p-4 border-b">
                 <div>
                   <h3 class="font-medium">Bébés</h3>
@@ -290,7 +271,6 @@
                 </div>
               </div>
 
-              <!-- Animaux -->
               <div class="flex items-center justify-between p-4">
                 <div>
                   <h3 class="font-medium">Animaux domestiques</h3>
@@ -317,7 +297,6 @@
               </div>
             </div>
 
-            <!-- Bouton de recherche -->
             <div class="mt-6">
               <button 
                 class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -449,7 +428,6 @@ const handleSearch = async () => {
     pets: pets.value
   })
 
-  console.log('Redirection vers:', `/search?${searchParams.toString()}`)
   
   closeModal()
   navigateTo(`/search?${searchParams.toString()}`)

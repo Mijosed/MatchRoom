@@ -10,10 +10,10 @@ export const hotels = [
       address: '12 Promenade des Anglais, 06000 Nice'
     },
     capacite: 4,
-    description: "Un hôtel luxueux au cœur de Paris",
+    description: "Un hôtel luxueux au cœur de Nice",
     prix: 250,
-    images: ["hotel1.jpg"],
-    adresse: "123 Avenue des Champs-Élysées"
+    photo: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3",
+    adresse: "12 Promenade des Anglais"
   },
   {
     id: 2,
@@ -26,10 +26,10 @@ export const hotels = [
       address: '25 Rue de la République, 69002 Lyon'
     },
     capacite: 3,
-    description: "Vue imprenable sur la Méditerranée",
+    description: "Une auberge chaleureuse au cœur de Lyon",
     prix: 180,
-    images: ["hotel2.jpg"],
-    adresse: "45 Promenade des Anglais"
+    photo: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    adresse: "25 Rue de la République"
   },
   {
     id: 3,
@@ -42,10 +42,10 @@ export const hotels = [
       address: '8 Rue de France, 06000 Nice'
     },
     capacite: 2,
-    description: "Au cœur du vieux Lyon",
+    description: "Un havre de paix pour se ressourcer",
     prix: 150,
-    images: ["hotel3.jpg"],
-    adresse: "78 Rue de la République"
+    photo: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    adresse: "8 Rue de France"
   },
   {
     id: 4,
@@ -58,10 +58,10 @@ export const hotels = [
       address: '2 Rue Scribe, 75009 Paris'
     },
     capacite: 6,
-    description: "Face au Vieux-Port",
+    description: "L'élégance parisienne par excellence",
     prix: 200,
-    images: ["hotel4.jpg"],
-    adresse: "12 Quai du Port"
+    photo: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    adresse: "2 Rue Scribe"
   },
   {
     id: 5,
@@ -74,10 +74,10 @@ export const hotels = [
       address: '15 Boulevard Victor Hugo, 06000 Nice'
     },
     capacite: 3,
-    description: "En plein centre de la ville rose",
+    description: "Une atmosphère zen au cœur de la ville",
     prix: 130,
-    images: ["hotel5.jpg"],
-    adresse: "34 Place du Capitole"
+    photo: "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80",
+    adresse: "15 Boulevard Victor Hugo"
   },
   {
     id: 6,
@@ -92,8 +92,7 @@ export const hotels = [
     capacite: 6,
     description: "Hôtel élégant situé sur la Place du Capitole",
     prix: 180,
-    images: ["hotel6.jpg"],
-    photo: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    photo: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     adresse: "7 Place du Capitole"
   }
 ]
