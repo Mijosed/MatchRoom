@@ -1,10 +1,14 @@
 <script setup>
-  definePageMeta({ layout: 'default' })
+definePageMeta({ layout: 'default' })
+import AccountHeader from '~/components/account/AccountHeader.vue'
+import AccountProfile from '~/components/account/AccountProfile.vue'
+import AccountBadges from '~/components/account/AccountBadges.vue'
 </script>
 
 <template>
-  <section class="p-4">
-    <h1 class="text-xl font-semibold mb-4">Mon compte</h1>
-    <p class="text-gray-600">Connectez-vous pour accéder à vos informations.</p>
+  <section class="p-4 space-y-6">
+    <AccountHeader />
+    <AccountProfile />
+    <AccountBadges />
   </section>
 </template>
