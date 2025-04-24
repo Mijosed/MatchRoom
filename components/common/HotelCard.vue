@@ -14,7 +14,7 @@ const toggleFavorite = () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden relative">
+  <div class="bg-blanc rounded-xl shadow hover:shadow-md transition overflow-hidden relative">
     <!-- Image + coeur -->
     <div class="relative">
       <img
@@ -24,7 +24,7 @@ const toggleFavorite = () => {
       />
       <button
         @click.stop="toggleFavorite"
-        class="absolute top-2 right-2 p-1 text-white hover:scale-110 transition transform"
+        class="absolute top-2 right-2 p-1 rounded-full text-bleu hover:scale-110 transition"
       >
         <Icon
           :name="isFavorite ? 'mdi:heart' : 'mdi:heart-outline'"
@@ -35,17 +35,17 @@ const toggleFavorite = () => {
 
     <!-- Contenu -->
     <div class="p-4 space-y-1">
-      <div class="text-sm text-gray-500">{{ hotel.address }}</div>
-      <h3 class="text-lg font-semibold truncate">{{ hotel.name }}</h3>
+      <div class="text-sm text-noir">{{ hotel.address }}</div>
+      <h3 class="text-lg font-semibold truncate text-noir">{{ hotel.name }}</h3>
 
       <!-- Ligne prix + bouton -->
-      <div class="flex items-center justify-between text-sm text-gray-700 mt-1">
+      <div class="flex items-center justify-between text-sm text-noir mt-1">
         <span>
-          À partir de <span class="font-bold">00€</span> / nuit
+          À partir de <span class="font-bold text-orange">100 €</span> / nuit
         </span>
         <NuxtLink
           :to="`/hotels/${hotel.id}`"
-          class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-full hover:bg-indigo-700 transition"
+          class="text-sm bg-bleu text-white px-3 py-1 rounded-full hover:bg-opacity-90 transition"
         >
           Négocier
         </NuxtLink>
