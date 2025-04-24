@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     },
   },
 
+
   build: {
     transpile: ["@supabase/ssr", "cookie"],
   },
