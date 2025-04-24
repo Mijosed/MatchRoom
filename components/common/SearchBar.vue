@@ -133,25 +133,27 @@
 
         <!-- Étape voyageurs -->
         <div v-else-if="currentStep === 'travelers'" class="p-4">
-          <div class="bg-white rounded-lg p-4 space-y-4">
+          <div class="bg-[#457891] rounded-2xl p-6 space-y-6 text-white">
+            <h2 class="text-xl font-semibold mb-6">Voyageurs</h2>
+            
             <!-- Adultes -->
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="font-medium">Adultes</h3>
-                <p class="text-sm text-gray-600">13 ans et plus</p>
+                <p class="text-sm opacity-80">13 ans et plus</p>
               </div>
               <div class="flex items-center gap-4">
                 <button 
                   @click="adults > 0 && adults--"
                   class="w-8 h-8 rounded-full border flex items-center justify-center"
-                  :class="adults > 0 ? 'border-[#457891] text-[#457891]' : 'border-gray-300 text-gray-300'"
+                  :class="adults > 0 ? 'border-white text-white' : 'border-gray-400 text-gray-400'"
                 >
                   -
                 </button>
                 <span class="w-4 text-center">{{ adults }}</span>
                 <button 
                   @click="adults++"
-                  class="w-8 h-8 rounded-full border border-[#457891] text-[#457891] flex items-center justify-center"
+                  class="w-8 h-8 rounded-full border border-white text-white flex items-center justify-center"
                 >
                   +
                 </button>
@@ -162,20 +164,67 @@
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="font-medium">Enfants</h3>
-                <p class="text-sm text-gray-600">2 à 12 ans</p>
+                <p class="text-sm opacity-80">De 2 à 12 ans</p>
               </div>
               <div class="flex items-center gap-4">
                 <button 
                   @click="children > 0 && children--"
                   class="w-8 h-8 rounded-full border flex items-center justify-center"
-                  :class="children > 0 ? 'border-[#457891] text-[#457891]' : 'border-gray-300 text-gray-300'"
+                  :class="children > 0 ? 'border-white text-white' : 'border-gray-400 text-gray-400'"
                 >
                   -
                 </button>
                 <span class="w-4 text-center">{{ children }}</span>
                 <button 
                   @click="children++"
-                  class="w-8 h-8 rounded-full border border-[#457891] text-[#457891] flex items-center justify-center"
+                  class="w-8 h-8 rounded-full border border-white text-white flex items-center justify-center"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Bébés -->
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-medium">Bébés</h3>
+                <p class="text-sm opacity-80">Moins de 2 ans</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <button 
+                  @click="babies > 0 && babies--"
+                  class="w-8 h-8 rounded-full border flex items-center justify-center"
+                  :class="babies > 0 ? 'border-white text-white' : 'border-gray-400 text-gray-400'"
+                >
+                  -
+                </button>
+                <span class="w-4 text-center">{{ babies }}</span>
+                <button 
+                  @click="babies++"
+                  class="w-8 h-8 rounded-full border border-white text-white flex items-center justify-center"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Animaux domestiques -->
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-medium">Animaux domestiques</h3>
+              </div>
+              <div class="flex items-center gap-4">
+                <button 
+                  @click="pets > 0 && pets--"
+                  class="w-8 h-8 rounded-full border flex items-center justify-center"
+                  :class="pets > 0 ? 'border-white text-white' : 'border-gray-400 text-gray-400'"
+                >
+                  -
+                </button>
+                <span class="w-4 text-center">{{ pets }}</span>
+                <button 
+                  @click="pets++"
+                  class="w-8 h-8 rounded-full border border-white text-white flex items-center justify-center"
                 >
                   +
                 </button>
@@ -184,10 +233,10 @@
 
             <button 
               @click="handleSearch"
-              class="w-full mt-4 py-3 bg-[#457891] text-white rounded-lg font-medium"
+              class="w-full mt-8 py-3 bg-white text-[#457891] rounded-lg font-medium"
               :disabled="!isTravelersValid"
             >
-              Rechercher
+              Recherche
             </button>
           </div>
         </div>
@@ -217,6 +266,8 @@ const dateRange = ref({ start: null, end: null })
 const adults = ref(1)
 const children = ref(0)
 const selectedDestination = ref(null)
+const babies = ref(0)
+const pets = ref(0)
 
 // Configuration du calendrier
 const masks = {
@@ -262,16 +313,24 @@ const stepTitle = computed(() => {
 })
 
 const isDateRangeValid = computed(() => {
-  return dateRange.value.start && dateRange.value.end
+  return dateRange.value && 
+         dateRange.value.start instanceof Date && 
+         dateRange.value.end instanceof Date &&
+         !isNaN(dateRange.value.start) &&
+         !isNaN(dateRange.value.end)
 })
 
 const isTravelersValid = computed(() => {
-  return adults.value > 0 || children.value > 0
+  const totalTravelers = adults.value + children.value + babies.value
+  return totalTravelers > 0
 })
 
 const formatDateRange = (start, end) => {
   if (!start || !end) return ''
-  return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`
+  const options = { day: 'numeric', month: 'short' }
+  const startDate = start.toLocaleDateString('fr-FR', options)
+  const endDate = end.toLocaleDateString('fr-FR', options)
+  return `${startDate} - ${endDate}`
 }
 
 // Methods
@@ -309,34 +368,125 @@ const goToTravelers = () => {
 }
 
 const handleSearch = async () => {
-  if (!selectedDestination.value || !isDateRangeValid.value || !isTravelersValid.value) return
-  
-  const totalTravelers = adults.value + children.value
-  
-  addSearch({
-    query: selectedDestination.value.city,
-    dates: formatDateRange(dateRange.value.start, dateRange.value.end),
-    travelers: totalTravelers
+  console.log('handleSearch called', {
+    destination: selectedDestination.value,
+    dateRange: dateRange.value,
+    isValid: isTravelersValid.value
   })
+
+  if (!selectedDestination.value || !isDateRangeValid.value || !isTravelersValid.value) {
+    console.log('Validation failed', {
+      hasDestination: !!selectedDestination.value,
+      isDateRangeValid: isDateRangeValid.value,
+      isTravelersValid: isTravelersValid.value
+    })
+    return
+  }
   
-  query.value = selectedDestination.value.city
-  await search()
-  
-  const searchParams = new URLSearchParams({
-    destination: selectedDestination.value.city,
-    startDate: dateRange.value.start.toISOString(),
-    endDate: dateRange.value.end.toISOString(),
-    adults: adults.value,
-    children: children.value
-  })
-  
-  closeModal()
-  navigateTo(`/search?${searchParams.toString()}`)
+  try {
+    // S'assurer que la ville est une chaîne de caractères
+    const cityString = typeof selectedDestination.value.city === 'string' 
+      ? selectedDestination.value.city 
+      : String(selectedDestination.value.city)
+    
+    // Vérifier et formater les dates
+    if (!dateRange.value.start || !dateRange.value.end) {
+      console.error('Dates invalides')
+      return
+    }
+
+    const startDate = new Date(dateRange.value.start)
+    const endDate = new Date(dateRange.value.end)
+    
+    // Formater les dates et calculer le nombre total de voyageurs
+    const formattedDates = formatDateRange(startDate, endDate)
+    const totalTravelers = adults.value + children.value + babies.value
+    
+    // Ajouter la recherche aux recherches récentes
+    addSearch(
+      cityString,
+      formattedDates,
+      totalTravelers
+    )
+    
+    // Construire les paramètres de recherche
+    const searchParams = new URLSearchParams({
+      city: cityString,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      adults: adults.value.toString(),
+      children: children.value.toString(),
+      babies: babies.value.toString(),
+      pets: pets.value.toString()
+    })
+    
+    console.log('Navigating to search with params:', searchParams.toString())
+    
+    closeModal()
+    
+    // Naviguer vers la page de recherche
+    await navigateTo({
+      path: '/search',
+      query: {
+        city: cityString,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        adults: adults.value.toString(),
+        children: children.value.toString(),
+        babies: babies.value.toString(),
+        pets: pets.value.toString()
+      }
+    })
+  } catch (error) {
+    console.error('Error during search:', error)
+  }
 }
 
 const useRecentSearch = (search) => {
-  searchQuery.value = search.query
-  handleSearch(search)
+  // Configurer la destination
+  selectedDestination.value = {
+    id: Date.now(),
+    city: search.query,
+    description: search.query
+  }
+  
+  // Extraire les dates de la chaîne de format "dd mmm - dd mmm"
+  const [startStr, endStr] = search.dates.split(' - ')
+  
+  // Convertir les dates en objets Date
+  const startParts = startStr.split(' ')
+  const endParts = endStr.split(' ')
+  
+  const months = {
+    'janv.': 0, 'févr.': 1, 'mars': 2, 'avr.': 3, 'mai': 4, 'juin': 5,
+    'juil.': 6, 'août': 7, 'sept.': 8, 'oct.': 9, 'nov.': 10, 'déc.': 11
+  }
+  
+  const currentYear = new Date().getFullYear()
+  
+  const startDate = new Date(currentYear, months[startParts[1]], parseInt(startParts[0]))
+  const endDate = new Date(currentYear, months[endParts[1]], parseInt(endParts[0]))
+  
+  // Si la date est dans le passé, ajouter un an
+  if (startDate < new Date()) {
+    startDate.setFullYear(startDate.getFullYear() + 1)
+    endDate.setFullYear(endDate.getFullYear() + 1)
+  }
+  
+  // Configurer les dates
+  dateRange.value = {
+    start: startDate,
+    end: endDate
+  }
+  
+  // Configurer le nombre de voyageurs
+  const totalTravelers = search.travelers
+  adults.value = totalTravelers
+  children.value = 0
+  babies.value = 0
+  
+  // Passer à l'étape des voyageurs
+  currentStep.value = 'travelers'
 }
 
 const openModal = () => {
@@ -359,6 +509,13 @@ const closeModal = () => {
 }
 
 const handleDayClick = (day) => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  if (day.date < today) {
+    return // Ignore clicks on past dates
+  }
+
   if (!dateRange.value.start || (dateRange.value.start && dateRange.value.end)) {
     // Premier clic ou nouveau range
     dateRange.value = {
