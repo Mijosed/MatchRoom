@@ -1,6 +1,6 @@
 <template>
   <nav class="bg-white border-t flex justify-around items-center h-16 shadow-inner">
-    <NuxtLink to="/" class="flex flex-col items-center text-sm">
+    <NuxtLink to="/offers" class="flex flex-col items-center text-sm">
       <Icon name="mdi:compass-outline" class="w-6 h-6" />
       Explorer
     </NuxtLink>
