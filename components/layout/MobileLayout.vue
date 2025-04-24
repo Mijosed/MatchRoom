@@ -6,9 +6,6 @@ import SearchBar from '~/components/common/SearchBar.vue'
 
 <template>
   <div class="min-h-screen pb-20 bg-white">
-    <div class="max-w-6xl mx-auto w-full px-4 mt-4">
-      <SearchBar />
-    </div>
     <main class="px-4 pt-4">
       <slot />
     </main>
