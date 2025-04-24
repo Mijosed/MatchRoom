@@ -16,7 +16,6 @@ import OfferCard from '~/components/common/OfferCard.vue'
 
     <!-- Contenu principal -->
     <main class="max-w-6xl mx-auto w-full px-4 mt-6 space-y-6">
-      <OfferCard />
       <slot />
     </main>
   </div>
