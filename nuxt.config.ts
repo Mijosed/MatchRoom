@@ -4,31 +4,58 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   components: true,
+  css: ["~/assets/css/main.css"],
+
   modules: [
     "@nuxtjs/supabase",
     "@nuxtjs/tailwindcss",
     "@nuxt/image",
     "@nuxt/icon",
     "@nuxtjs/google-fonts",
+    "shadcn-nuxt",
+    "@nuxtjs/color-mode",
   ],
+
   googleFonts: {
     families: {
       Montserrat: true,
     },
   },
+
+  colorMode: {
+    classSuffix: "",
+    preference: "system",
+    fallback: "light",
+    storageKey: "nuxt-color-mode",
+  },
+
   build: {
     transpile: ["@supabase/ssr", "cookie"],
   },
+
   vite: {
     optimizeDeps: {
       include: ["cookie"],
     },
   },
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+
   runtimeConfig: {
     public: {
       supabase: {
         redirect: false,
       },
     },
+  },
+
+  shadcn: {
+    prefix: "",
+    componentDir: "./components/ui",
   },
 });
