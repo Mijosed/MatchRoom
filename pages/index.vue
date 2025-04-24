@@ -5,6 +5,7 @@
         <button @click="navigateTo('/hotel')">Voir notre hôtel</button>
         <button @click="navigateTo('/admin')">Voir la page admin</button>
         <button @click="navigateTo('/map')">Voir la map</button>
+        <button @click="navigateTo('/search')">Voir la recherche</button>
         <template v-if="!isLoading">
             <button v-if="!isLoggedIn" @click="navigateTo('/login')">Se connecter</button>
             <button v-else @click="logout()">Se déconnecter</button>
