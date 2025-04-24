@@ -1,4 +1,3 @@
-import { hotels } from '~/data/hotels'
 
 export default defineEventHandler(async (event) => {
   try {

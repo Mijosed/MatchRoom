@@ -16,16 +16,31 @@ export function useRecentSearches() {
     }
   }
 
-  const addSearch = (query) => {
+  const addSearch = (query, dates, travelers) => {
     if (!query.trim()) return
     
     const search = {
       id: Date.now(),
       query,
+      dates,
+      travelers,
       timestamp: new Date().toISOString()
     }
 
-    recentSearches.value.unshift(search)
+    // Vérifier si une recherche similaire existe déjà
+    const existingIndex = recentSearches.value.findIndex(
+      s => s.query.toLowerCase() === query.toLowerCase()
+    )
+
+    if (existingIndex !== -1) {
+      // Mettre à jour la recherche existante
+      recentSearches.value[existingIndex] = search
+    } else {
+      // Ajouter la nouvelle recherche
+      recentSearches.value.unshift(search)
+    }
+
+    // Garder seulement les 5 dernières recherches
     recentSearches.value = recentSearches.value.slice(0, 5)
 
     if (process.client) {

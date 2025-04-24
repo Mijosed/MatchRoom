@@ -1,310 +1,194 @@
 <template>
   <div class="relative">
-    <div 
-      class="bg-white rounded-full shadow-sm px-4 py-2 flex items-center gap-2 cursor-pointer"
-      @click="openModal"
-    >
-    <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
-    <input
+    <!-- Barre de recherche -->
+    <div class="bg-white rounded-full shadow-sm px-4 py-2 flex items-center gap-2 cursor-pointer" @click="openModal">
+      <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
+      <input
         readonly
-      type="text"
-      placeholder="Rechercher un hôtel, une ville…"
+        type="text"
+        placeholder="Rechercher un hôtel, une ville…"
         class="w-full outline-none bg-transparent text-sm cursor-pointer"
       />
     </div>
 
-    <div v-if="isModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50" @click="closeModal"></div>
+    <!-- Modal -->
+    <div v-if="isModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-white">
+      <!-- En-tête -->
+      <div class="p-4 bg-white">
+        <div class="flex items-center justify-between">
+          <button @click="goBack" class="p-2" v-if="currentStep !== 'search'">
+            <Icon name="mdi:arrow-left" class="w-6 h-6" />
+          </button>
+          <button @click="closeModal" class="p-2" v-else>
+            <Icon name="mdi:close" class="w-6 h-6" />
+          </button>
+          <h1 class="text-xl font-semibold text-[#457891]">
+            {{ stepTitle }}
+          </h1>
+          <div class="w-10"></div>
+        </div>
+      </div>
 
-      <div class="relative min-h-screen flex items-center justify-center p-4 z-50">
-        <div class="relative bg-white rounded-lg w-full max-w-2xl p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold">
-              {{ 
-                currentStep === 'search' ? 'Rechercher' : 
-                currentStep === 'calendar' ? 'Dates du séjour' : 
-                'Voyageurs'
-              }}
-            </h2>
-            <button @click="closeModal" class="text-gray-400 hover:text-gray-500">×</button>
-          </div>
-
-          <div v-if="currentStep === 'search'">
-            <div class="mb-6">
-              <div class="flex items-center gap-2 border border-gray-300 rounded-lg p-3">
-                <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
-                <input 
-                  v-model="searchQuery"
-                  type="text"
-                  class="w-full outline-none"
-                  placeholder="Rechercher une ville..."
-                  @keyup.enter="handleSearch"
-                  @input="handleInput"
-                  @keydown.down.prevent="navigateSuggestion(1)"
-                  @keydown.up.prevent="navigateSuggestion(-1)"
-                  @keydown.enter="selectSuggestion(selectedIndex)"
-                  ref="searchInput"
-                />
-              </div>
-
-              <div v-if="recentSearches.length > 0" class="mt-2">
-                <div class="text-sm text-gray-500 mb-2">Recherches récentes :</div>
-                <div class="flex flex-wrap gap-2">
-                  <button
-                    v-for="search in recentSearches"
-                    :key="search.id"
-                    class="group flex items-center gap-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-1"
-                    @click="useRecentSearch(search)"
-                  >
-                    {{ search.query }}
-                    <span 
-                      class="opacity-0 group-hover:opacity-100 text-red-500 cursor-pointer ml-1"
-                      @click.stop="removeSearch(search.id)"
-                    >
-                      ×
-                    </span>
-                  </button>
-                </div>
-              </div>
-              
-              <div v-if="showSuggestions && filteredSuggestions.length > 0" class="mt-4">
-                <div class="text-sm text-gray-500 mb-2">Suggestions :</div>
-                <ul class="border rounded-lg divide-y">
-                  <li 
-                    v-for="(suggestion, index) in filteredSuggestions" 
-                    :key="suggestion.id"
-                    :class="[
-                      'p-3 cursor-pointer flex items-center gap-2',
-                      selectedIndex === index ? 'bg-gray-100' : 'hover:bg-gray-50'
-                    ]"
-                    @mouseenter="selectedIndex = index"
-                    @click="selectSuggestion(index)"
-                  >
-                    <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span class="font-medium">{{ suggestion.city }}</span>
-                      <span class="text-gray-500">, {{ suggestion.region }}</span>
-                      <span class="text-gray-400 text-sm ml-1">{{ suggestion.country }}</span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div v-if="hasSearched" class="max-h-[400px] overflow-y-auto">
-              <div v-if="!results.length" class="text-center py-8 text-gray-500">
-                Aucun hôtel ne correspond à votre recherche
-              </div>
-              
-              <ul v-else class="space-y-4">
-                <li 
-                  v-for="hotel in results" 
-                  :key="hotel.id"
-                  class="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                  @click="selectHotel(hotel)"
-                >
-                  <h3 class="font-semibold text-lg">{{ hotel.name }}</h3>
-                  <p class="text-gray-600">{{ hotel.address }}</p>
-                  <p class="text-sm text-gray-500 mt-1">
-                    {{ hotel.tags.join(' • ') }}
-                  </p>
-                </li>
-              </ul>
+      <div class=" flex-1">
+        <!-- Étape recherche -->
+        <div v-if="currentStep === 'search'" class="p-4 bg-[#457891]">
+          <div class="relative mb-6">
+            <div class="flex items-center rounded-lg bg-gray-100 px-4">
+              <input 
+                v-model="searchQuery"
+                type="text"
+                class="w-full py-3 bg-transparent outline-none"
+                placeholder="Destination"
+                @input="handleInput"
+                @keydown.down.prevent="navigateSuggestion(1)"
+                @keydown.up.prevent="navigateSuggestion(-1)"
+                @keydown.enter="selectSuggestion(selectedIndex)"
+                ref="searchInput"
+              />
+              <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
             </div>
           </div>
 
-          <div v-else-if="currentStep === 'calendar'" class="space-y-4">
-            <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-500" />
-              <span class="font-medium">{{ selectedCity }}</span>
-              <button 
-                @click="currentStep = 'search'"
-                class="ml-auto text-sm text-blue-600 hover:text-blue-700"
-              >
-                Modifier
-              </button>
-            </div>
-
-            <div class="flex gap-4">
-              <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Arrivée</label>
-                <input 
-                  type="date" 
-                  v-model="startDate"
-                  class="w-full border rounded-lg p-2"
-                  :min="minDate"
-                />
-              </div>
-              <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Départ</label>
-                <input 
-                  type="date" 
-                  v-model="endDate"
-                  class="w-full border rounded-lg p-2"
-                  :min="startDate || minDate"
-                />
-              </div>
-            </div>
-
-            <div class="border-t pt-4">
-              <h3 class="text-sm font-medium text-gray-700 mb-2">Flexibilité</h3>
-              <div class="flex gap-2">
-                <button
-                  v-for="option in flexibilityOptions"
-                  :key="option.days"
-                  :class="[
-                    'px-3 py-1 rounded-full text-sm',
-                    selectedFlexibility === option.days
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  ]"
-                  @click="selectedFlexibility = option.days"
-                >
-                  {{ option.label }}
-                </button>
-              </div>
-            </div>
-
-            <div class="mt-6">
-              <button 
-                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                @click="currentStep = 'travelers'"
-                :disabled="!isValidDateRange"
-              >
-                Suivant
-              </button>
-            </div>
-          </div>
-
-          <div v-else-if="currentStep === 'travelers'" class="space-y-4">
+          <!-- Recherches récentes -->
+          <div class="mb-6">
+            <h2 class="text-white text-lg font-medium mb-4">Recherches récentes</h2>
             <div class="space-y-2">
-              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-500" />
-                <span class="font-medium">{{ selectedCity }}</span>
-                <button 
-                  @click="currentStep = 'search'"
-                  class="ml-auto text-sm text-blue-600 hover:text-blue-700"
-                >
-                  Modifier
-                </button>
-              </div>
-              <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                <Icon name="mdi:calendar" class="w-5 h-5 text-gray-500" />
-                <span class="font-medium">{{ formatDateRange }}</span>
-                <button 
-                  @click="currentStep = 'calendar'"
-                  class="ml-auto text-sm text-blue-600 hover:text-blue-700"
-                >
-                  Modifier
-                </button>
-              </div>
-            </div>
-
-            <div class="space-y-4">
-              <div class="flex items-center justify-between p-4 border-b">
-                <div>
-                  <h3 class="font-medium">Adultes</h3>
-                  <p class="text-sm text-gray-500">13 ans et plus</p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center"
-                    :class="adults > 0 ? 'text-gray-700 hover:border-gray-400' : 'text-gray-300'"
-                    @click="adults = Math.max(0, adults - 1)"
-                  >
-                    -
-                  </button>
-                  <span class="w-4 text-center">{{ adults }}</span>
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center text-gray-700 hover:border-gray-400"
-                    @click="adults++"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 border-b">
-                <div>
-                  <h3 class="font-medium">Enfants</h3>
-                  <p class="text-sm text-gray-500">De 2 à 12 ans</p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center"
-                    :class="children > 0 ? 'text-gray-700 hover:border-gray-400' : 'text-gray-300'"
-                    @click="children = Math.max(0, children - 1)"
-                  >
-                    -
-                  </button>
-                  <span class="w-4 text-center">{{ children }}</span>
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center text-gray-700 hover:border-gray-400"
-                    @click="children++"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 border-b">
-                <div>
-                  <h3 class="font-medium">Bébés</h3>
-                  <p class="text-sm text-gray-500">- de 2 ans</p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center"
-                    :class="babies > 0 ? 'text-gray-700 hover:border-gray-400' : 'text-gray-300'"
-                    @click="babies = Math.max(0, babies - 1)"
-                  >
-                    -
-                  </button>
-                  <span class="w-4 text-center">{{ babies }}</span>
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center text-gray-700 hover:border-gray-400"
-                    @click="babies++"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between p-4">
-                <div>
-                  <h3 class="font-medium">Animaux domestiques</h3>
-                  <button class="text-sm text-gray-500 underline">
-                    Vous voyagez avec un animal d'assistance ?
-                  </button>
-                </div>
-                <div class="flex items-center gap-3">
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center"
-                    :class="pets > 0 ? 'text-gray-700 hover:border-gray-400' : 'text-gray-300'"
-                    @click="pets = Math.max(0, pets - 1)"
-                  >
-                    -
-                  </button>
-                  <span class="w-4 text-center">{{ pets }}</span>
-                  <button 
-                    class="w-8 h-8 rounded-full border flex items-center justify-center text-gray-700 hover:border-gray-400"
-                    @click="pets++"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6">
-              <button 
-                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                @click="searchWithTravelers"
-                :disabled="!isValidTravelers"
+              <div 
+                v-for="search in recentSearches" 
+                :key="search.id"
+                class="flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer"
+                @click="useRecentSearch(search)"
               >
-                Rechercher
-              </button>
+                <span class="font-medium">{{ search.query }}</span>
+                <div class="flex items-center gap-4">
+                  <span class="text-gray-600">{{ search.dates }}</span>
+                  <div class="flex items-center">
+                    <Icon name="mdi:account" class="w-4 h-4 mr-1" />
+                    <span>{{ search.travelers }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Suggestions -->
+          <div>
+            <h2 class="text-white text-lg font-medium mb-4">Suggestions de destinations</h2>
+            <div class="space-y-2">
+              <div 
+                v-for="(suggestion, index) in suggestions" 
+                :key="suggestion.id"
+                :class="[
+                  'p-3 bg-gray-100 rounded-lg cursor-pointer',
+                  selectedIndex === index ? 'bg-gray-200' : ''
+                ]"
+                @click="selectSuggestion(index)"
+              >
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ suggestion.city }}</span>
+                  <span class="text-gray-600 text-sm">{{ suggestion.description }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape calendrier -->
+        <div v-else-if="currentStep === 'calendar'" class="h-full flex flex-col">
+          <!-- Destination sélectionnée -->
+          <div class="p-4 mb-6  ">
+            <div class="flex justify-between items-center text-white bg-[#457891] p-4 rounded-2xl">
+              <span class="text-sm">Destination</span>
+              <span class="font-medium">{{ selectedDestination?.city }}</span>
+            </div>
+          </div>
+
+          <!-- Calendrier -->
+          <div class="px-4 flex-1">
+            <Calendar
+              v-model="dateRange"
+              mode="range"
+              :min-date="new Date()"
+              :attributes="calendarAttributes"
+              :masks="masks"
+              is-expanded
+              :columns="1"
+              class="w-full"
+              :title-position="'center'"
+              @dayclick="handleDayClick"
+            />
+          </div>
+
+          <!-- Bouton Suivant -->
+          <div class="p-4 mt-auto">
+            <button 
+              @click="goToTravelers"
+              class="w-full py-3 bg-white text-[#457891] rounded-lg font-medium"
+              :disabled="!isDateRangeValid"
+            >
+              Suivant
+            </button>
+          </div>
+        </div>
+
+        <!-- Étape voyageurs -->
+        <div v-else-if="currentStep === 'travelers'" class="p-4">
+          <div class="bg-white rounded-lg p-4 space-y-4">
+            <!-- Adultes -->
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-medium">Adultes</h3>
+                <p class="text-sm text-gray-600">13 ans et plus</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <button 
+                  @click="adults > 0 && adults--"
+                  class="w-8 h-8 rounded-full border flex items-center justify-center"
+                  :class="adults > 0 ? 'border-[#457891] text-[#457891]' : 'border-gray-300 text-gray-300'"
+                >
+                  -
+                </button>
+                <span class="w-4 text-center">{{ adults }}</span>
+                <button 
+                  @click="adults++"
+                  class="w-8 h-8 rounded-full border border-[#457891] text-[#457891] flex items-center justify-center"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Enfants -->
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-medium">Enfants</h3>
+                <p class="text-sm text-gray-600">2 à 12 ans</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <button 
+                  @click="children > 0 && children--"
+                  class="w-8 h-8 rounded-full border flex items-center justify-center"
+                  :class="children > 0 ? 'border-[#457891] text-[#457891]' : 'border-gray-300 text-gray-300'"
+                >
+                  -
+                </button>
+                <span class="w-4 text-center">{{ children }}</span>
+                <button 
+                  @click="children++"
+                  class="w-8 h-8 rounded-full border border-[#457891] text-[#457891] flex items-center justify-center"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <button 
+              @click="handleSearch"
+              class="w-full mt-4 py-3 bg-[#457891] text-white rounded-lg font-medium"
+              :disabled="!isTravelersValid"
+            >
+              Rechercher
+            </button>
           </div>
         </div>
       </div>
@@ -313,73 +197,151 @@
 </template>
 
 <script setup>
-import { ref, nextTick, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useSearch } from '@/composables/useSearch'
 import { useRecentSearches } from '@/composables/useRecentSearches'
 import { useCitySuggestions } from '~/composables/useCitySuggestions'
+import { Calendar } from 'v-calendar'
+import 'v-calendar/style.css'
 
-const { query, results, loading, search } = useSearch()
-const { recentSearches, addSearch, removeSearch } = useRecentSearches()
+const { query, search } = useSearch()
+const { recentSearches, addSearch } = useRecentSearches()
 const { suggestions } = useCitySuggestions()
 
 const isModalOpen = ref(false)
-const hasSearched = ref(false)
-const searchInput = ref(null)
 const searchQuery = ref('')
-const showSuggestions = ref(false)
 const selectedIndex = ref(-1)
+const searchInput = ref(null)
 const currentStep = ref('search')
-const selectedCity = ref('')
-const startDate = ref('')
-const endDate = ref('')
-const selectedFlexibility = ref(0)
-const adults = ref(0)
+const dateRange = ref({ start: null, end: null })
+const adults = ref(1)
 const children = ref(0)
-const babies = ref(0)
-const pets = ref(0)
+const selectedDestination = ref(null)
 
-// Filtrer les suggestions
-const filteredSuggestions = computed(() => {
-  if (!searchQuery.value) return suggestions
-  const query = searchQuery.value.toLowerCase()
-  return suggestions.filter(suggestion => 
-    suggestion.city.toLowerCase().includes(query) || 
-    suggestion.region.toLowerCase().includes(query) ||
-    suggestion.country.toLowerCase().includes(query)
-  )
+// Configuration du calendrier
+const masks = {
+  title: 'MMMM YYYY',
+  weekdays: 'WW',
+}
+
+const calendarAttributes = ref([
+  {
+    key: 'today',
+    highlight: {
+      fillMode: 'light',
+      color: 'orange',
+    },
+    dates: new Date(),
+  },
+  {
+    key: 'range',
+    highlight: {
+      startEnd: {
+        fillMode: 'solid',
+        color: 'orange',
+      },
+      base: {
+        fillMode: 'light',
+        color: 'orange',
+      }
+    },
+    
+  },
+])
+
+// Computed properties
+const stepTitle = computed(() => {
+  switch (currentStep.value) {
+    case 'calendar':
+      return 'Sélectionnez vos dates'
+    case 'travelers':
+      return 'Voyageurs'
+    default:
+      return 'Recherche'
+  }
 })
 
-const flexibilityOptions = [
-  { days: 0, label: 'Dates exactes' },
-  { days: 1, label: '± 1 jour' },
-  { days: 2, label: '± 2 jours' },
-  { days: 3, label: '± 3 jours' },
-  { days: 7, label: '± 7 jours' },
-]
-
-const minDate = computed(() => {
-  const today = new Date()
-  return today.toISOString().split('T')[0]
+const isDateRangeValid = computed(() => {
+  return dateRange.value.start && dateRange.value.end
 })
 
-const isValidDateRange = computed(() => {
-  return startDate.value && endDate.value && endDate.value >= startDate.value
+const isTravelersValid = computed(() => {
+  return adults.value > 0 || children.value > 0
 })
 
-const isValidTravelers = computed(() => {
-  return adults.value > 0 || children.value > 0 || babies.value > 0 || pets.value > 0
-})
+const formatDateRange = (start, end) => {
+  if (!start || !end) return ''
+  return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`
+}
 
-const formatDateRange = computed(() => {
-  if (!startDate.value || !endDate.value) return ''
-  const start = new Date(startDate.value).toLocaleDateString()
-  const end = new Date(endDate.value).toLocaleDateString()
-  return `${start} - ${end}`
-})
+// Methods
+const handleInput = () => {
+  selectedIndex.value = -1
+}
+
+const goBack = () => {
+  if (currentStep.value === 'travelers') {
+    currentStep.value = 'calendar'
+  } else if (currentStep.value === 'calendar') {
+    currentStep.value = 'search'
+  }
+}
+
+const navigateSuggestion = (direction) => {
+  const newIndex = selectedIndex.value + direction
+  if (newIndex >= -1 && newIndex < suggestions.length) {
+    selectedIndex.value = newIndex
+  }
+}
+
+const selectSuggestion = (index) => {
+  if (index === -1 || !suggestions[index]) return
+  const suggestion = suggestions[index]
+  selectedDestination.value = suggestion
+  searchQuery.value = suggestion.city
+  currentStep.value = 'calendar'
+}
+
+const goToTravelers = () => {
+  if (isDateRangeValid.value) {
+    currentStep.value = 'travelers'
+  }
+}
+
+const handleSearch = async () => {
+  if (!selectedDestination.value || !isDateRangeValid.value || !isTravelersValid.value) return
+  
+  const totalTravelers = adults.value + children.value
+  
+  addSearch({
+    query: selectedDestination.value.city,
+    dates: formatDateRange(dateRange.value.start, dateRange.value.end),
+    travelers: totalTravelers
+  })
+  
+  query.value = selectedDestination.value.city
+  await search()
+  
+  const searchParams = new URLSearchParams({
+    destination: selectedDestination.value.city,
+    startDate: dateRange.value.start.toISOString(),
+    endDate: dateRange.value.end.toISOString(),
+    adults: adults.value,
+    children: children.value
+  })
+  
+  closeModal()
+  navigateTo(`/search?${searchParams.toString()}`)
+}
+
+const useRecentSearch = (search) => {
+  searchQuery.value = search.query
+  handleSearch(search)
+}
 
 const openModal = () => {
   isModalOpen.value = true
-  showSuggestions.value = true
+  currentStep.value = 'search'
   nextTick(() => {
     searchInput.value?.focus()
   })
@@ -388,126 +350,63 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false
   currentStep.value = 'search'
-  selectedCity.value = ''
-  startDate.value = ''
-  endDate.value = ''
-  selectedFlexibility.value = 0
   searchQuery.value = ''
-  showSuggestions.value = false
-  hasSearched.value = false
   selectedIndex.value = -1
-  adults.value = 0
+  dateRange.value = { start: null, end: null }
+  adults.value = 1
   children.value = 0
-  babies.value = 0
-  pets.value = 0
+  selectedDestination.value = null
 }
 
-const handleInput = () => {
-  showSuggestions.value = true
-  hasSearched.value = false
-  selectedIndex.value = -1
-}
-
-const handleSearch = async () => {
-  if (!searchQuery.value?.trim()) return
-  showSuggestions.value = false
-  addSearch(searchQuery.value)
-  query.value = searchQuery.value
-  await search()
-  hasSearched.value = true
-
-  const searchParams = new URLSearchParams({
-    city: selectedCity.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
-    flexibility: selectedFlexibility.value,
-    adults: adults.value,
-    children: children.value,
-    babies: babies.value,
-    pets: pets.value
-  })
-
+const handleDayClick = (day) => {
+  if (!dateRange.value.start || (dateRange.value.start && dateRange.value.end)) {
+    // Premier clic ou nouveau range
+    dateRange.value = {
+      start: day.date,
+      end: null,
+    }
+  } else {
+    // Deuxième clic
+    if (day.date < dateRange.value.start) {
+      dateRange.value.end = dateRange.value.start
+      dateRange.value.start = day.date
+    } else {
+      dateRange.value.end = day.date
+    }
+  }
   
-  closeModal()
-  navigateTo(`/search?${searchParams.toString()}`)
-}
-
-const useRecentSearch = async (search) => {
-  searchQuery.value = search.query
-  query.value = search.query
-  await search()
-  hasSearched.value = true
-  showSuggestions.value = false
-}
-
-const navigateSuggestion = (direction) => {
-  const newIndex = selectedIndex.value + direction
-  if (newIndex >= -1 && newIndex < filteredSuggestions.value.length) {
-    selectedIndex.value = newIndex
+  // Mettre à jour les attributs du calendrier
+  calendarAttributes.value[1].dates = {
+    start: dateRange.value.start,
+    end: dateRange.value.end,
   }
 }
-
-const selectSuggestion = (index) => {
-  if (index === -1 || !filteredSuggestions.value[index]) return
-  
-  const selected = filteredSuggestions.value[index]
-  selectedCity.value = `${selected.city}, ${selected.region}`
-  currentStep.value = 'calendar'
-}
-
-const selectHotel = (hotel) => {
-  closeModal()
-  navigateTo(`/hotel/${hotel.id}`)
-}
-
-const searchWithDates = () => {
-  if (!isValidDateRange.value) return
-  
-  // Construire les paramètres de recherche
-  const searchParams = new URLSearchParams({
-    city: selectedCity.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
-    flexibility: selectedFlexibility.value
-  })
-
-  // Fermer la modal et rediriger vers la page de recherche
-  closeModal()
-  navigateTo(`/search?${searchParams.toString()}`)
-}
-
-const searchWithTravelers = () => {
-  if (!isValidTravelers.value) return
-  
-  // Construire les paramètres de recherche
-  const searchParams = new URLSearchParams({
-    city: selectedCity.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
-    flexibility: selectedFlexibility.value,
-    adults: adults.value,
-    children: children.value,
-    babies: babies.value,
-    pets: pets.value
-  })
-
-  // Fermer la modal et rediriger vers la page de recherche
-  closeModal()
-  navigateTo(`/search?${searchParams.toString()}`)
-}
-
-// Fermer les suggestions si on clique en dehors
-const handleClickOutside = (event) => {
-  if (!event.target.closest('.relative')) {
-    showSuggestions.value = false
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
+<style scoped>
+:deep(.vc-pane-container) {
+  @apply bg-[#457891];
+  @apply rounded-2xl;
+}
+
+:deep(.vc-pane) {
+  @apply rounded-2xl;
+}
+
+:deep(.vc-pane-layout) {
+  @apply rounded-2xl;
+}
+
+:deep(.vc-container) {
+  @apply w-full;
+  @apply border-0;
+}
+:deep(.vc-weekday) {
+  @apply text-white;
+  @apply font-normal
+}
+:deep(.vc-day-content){
+  @apply text-white font-normal
+}
+</style>
+
+

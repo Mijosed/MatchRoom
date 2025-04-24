@@ -1,4 +1,8 @@
 <script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const props = defineProps({
   hotel: {
     type: Object,
@@ -7,6 +11,9 @@ const props = defineProps({
 })
 
 
+const goToNegotiation = () => {
+  router.push(`/negotiation/${props.hotel.id}`);
+};
 </script>
 
 <template>
@@ -48,7 +55,10 @@ const props = defineProps({
             <p class="text-sm text-gray-500">À partir de</p>
             <p class="text-sm text-gray-500">par nuit</p>
           </div>
-          <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          <button 
+            @click="goToNegotiation"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
             négocier
           </button>
         </div>
