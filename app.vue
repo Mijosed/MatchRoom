@@ -1,13 +1,5 @@
 <template>
-  <div class="font-Montserrat">
-    <NuxLoadingIndicator />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
-
-<style>
-@import '@/assets/css/main.css';
-</style> 
