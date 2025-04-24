@@ -113,7 +113,7 @@
               :masks="masks"
               is-expanded
               :columns="1"
-              class="w-full"
+              class="w-full h-[600px]"
               :title-position="'center'"
               @dayclick="handleDayClick"
             />
@@ -384,28 +384,43 @@ const handleDayClick = (day) => {
 </script>
 <style scoped>
 :deep(.vc-pane-container) {
-  @apply bg-[#457891];
-  @apply rounded-2xl;
+  @apply bg-[#457891] rounded-2xl h-full;
 }
 
 :deep(.vc-pane) {
-  @apply rounded-2xl;
+  @apply rounded-2xl h-full;
 }
 
 :deep(.vc-pane-layout) {
-  @apply rounded-2xl;
+  @apply rounded-2xl h-full;
 }
 
 :deep(.vc-container) {
-  @apply w-full;
-  @apply border-0;
+  @apply w-full border-0 h-full;
 }
+
+:deep(.vc-weeks) {
+  @apply h-[80%] flex flex-col;
+}
+
+:deep(.vc-week) {
+  @apply flex-1;
+}
+
+:deep(.vc-day) {
+  @apply min-h-[70px] text-lg;
+}
+
 :deep(.vc-weekday) {
-  @apply text-white;
-  @apply font-normal
+  @apply text-white font-normal text-lg py-3;
 }
-:deep(.vc-day-content){
-  @apply text-white font-normal
+
+:deep(.vc-day-content) {
+  @apply text-white font-normal text-lg w-10 h-10 flex items-center justify-center;
+}
+
+:deep(.vc-highlights) {
+  @apply bg-transparent;
 }
 </style>
 
