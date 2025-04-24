@@ -106,7 +106,7 @@
                   <h3 class="font-semibold text-lg">{{ hotel.name }}</h3>
                   <p class="text-gray-600">{{ hotel.address }}</p>
                   <p class="text-sm text-gray-500 mt-1">
-                    {{ hotel.equipements.join(' • ') }}
+                    {{ hotel.tags.join(' • ') }}
                   </p>
                 </li>
               </ul>

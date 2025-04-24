@@ -43,10 +43,10 @@ const initMap = () => {
     markers = []
 
     props.hotels.forEach((hotel) => {
-      if (!hotel.location?.lat || !hotel.location?.lng) return
+      if (!hotel.lat || !hotel.lng) return
 
-      const lat = typeof hotel.location.lat === 'string' ? parseFloat(hotel.location.lat) : hotel.location.lat
-      const lng = typeof hotel.location.lng === 'string' ? parseFloat(hotel.location.lng) : hotel.location.lng
+      const lat = typeof hotel.lat === 'string' ? parseFloat(hotel.lat) : hotel.lat
+      const lng = typeof hotel.lng === 'string' ? parseFloat(hotel.lng) : hotel.lng
 
       if (Number.isFinite(lat) && Number.isFinite(lng)) {
         try {
@@ -55,7 +55,6 @@ const initMap = () => {
               <div class="p-2">
                 <h3 class="font-semibold">${hotel.name}</h3>
                 <p class="text-sm text-gray-600">${hotel.adresse}</p>
-                <p class="text-sm font-bold text-blue-600 mt-1">${hotel.prix}€ / nuit</p>
               </div>
             `)
             .addTo(map)

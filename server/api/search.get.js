@@ -25,23 +25,25 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-
     const totalPersonnes = Number(adults) + Number(children) + Number(babies)
     
-    if (totalPersonnes > 0) {
-      filteredHotels = filteredHotels.filter(hotel => {
-        const match = hotel?.capacite >= totalPersonnes
-        return match
-      })
-    }
+    //if (totalPersonnes > 0) {
+      //filteredHotels = filteredHotels.filter(hotel => {
+        //const match = hotel?.capacite >= totalPersonnes
+        //return match
+      //})
+    //}
 
-
-    const hotelsWithPhotos = filteredHotels.map(hotel => ({
+    const hotelsWithAllData = filteredHotels.map(hotel => ({
       ...hotel,
-      photo: hotel.photo || hotel.images?.[0] || '/images/hotel-placeholder.jpg'
+      photo: hotel.photo || hotel.images?.[0] || '/images/hotel-placeholder.jpg',
+      tags: hotel.tags || [],
+      address: hotel.address || hotel.adresse,
+      lat: hotel.lat,
+      lng: hotel.lng
     }))
 
-    return hotelsWithPhotos
+    return hotelsWithAllData
 
   } catch (error) {
     console.error('Erreur de recherche:', error)

@@ -32,13 +32,13 @@ const props = defineProps({
 
           <p class="text-gray-700 mb-4">{{ hotel.description }}</p>
 
-          <div class="flex flex-wrap gap-2 mb-4">
+          <div v-if="hotel.tags && hotel.tags.length > 0" class="flex flex-wrap gap-2 mb-4">
             <span 
-              v-for="equipement in hotel.equipements" 
-              :key="equipement"
+              v-for="tag in hotel.tags" 
+              :key="tag"
               class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
             >
-              {{ equipement }}
+              {{ tag }}
             </span>
           </div>
         </div>
@@ -46,7 +46,6 @@ const props = defineProps({
         <div class="flex items-end justify-between mt-4">
           <div>
             <p class="text-sm text-gray-500">À partir de</p>
-            <p class="text-2xl font-bold text-blue-600">{{ hotel.prix }}€</p>
             <p class="text-sm text-gray-500">par nuit</p>
           </div>
           <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
