@@ -1,12 +1,21 @@
 <script setup>
 const unlocked = ref(false)
 const dragging = ref(false)
-const progress = ref(0.06)
+const initialProgress = 0.06  // Variable pour stocker la position initiale
+const progress = ref(initialProgress)
 const unlockThreshold = 0.9
 const sliderRef = ref(null)
 let animationFrame
 let startX = 0
 let lastX = 0
+
+// Fonction pour faire vibrer l'appareil
+const vibrate = () => {
+  if (window.navigator && window.navigator.vibrate) {
+    // Vibrer pendant 100ms
+    window.navigator.vibrate(100)
+  }
+}
 
 const startDrag = (e) => {
   e.preventDefault()
@@ -31,6 +40,7 @@ const startDrag = (e) => {
 
     if (percent >= unlockThreshold) {
       unlocked.value = true
+      vibrate() 
       stopDrag()
     }
   }
@@ -56,11 +66,11 @@ const startDrag = (e) => {
 const animateBack = () => {
   cancelAnimationFrame(animationFrame)
   const animate = () => {
-    if (progress.value > 0.05) {
+    if (progress.value > initialProgress) {
       progress.value -= 0.05
       animationFrame = requestAnimationFrame(animate)
     } else {
-      progress.value = 0.05
+      progress.value = initialProgress
     }
   }
   animate()
@@ -94,6 +104,12 @@ watch(unlocked, (newValue) => {
   ref="sliderRef"
   class="relative w-full max-w-md h-14 bg-[#2E2E2E] border border-bleu rounded-full overflow-hidden px-1"
 >
+  <!-- Barre de progression -->
+  <div 
+    class="absolute top-0 left-0 h-full bg-bleu bg-opacity-25 z-0 transition-all"
+    :style="{ width: `${progress * 100}%` }"
+  ></div>
+  
   <!-- Curseur draggable -->
   <div
     class="absolute top-1/2 -translate-y-1/2 h-12 w-12 bg-bleu rounded-full z-10 flex items-center justify-center text-white text-xl font-bold cursor-pointer transition-all"
@@ -113,7 +129,7 @@ watch(unlocked, (newValue) => {
       <template v-else>
         <h2 class="text-2xl font-bold mb-2">Offre du jour !</h2>
         <p class="text-center text-sm">Hôtel Soleil à -30% à seulement 2km de votre position.</p>
-        <button class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-full shadow">
+        <button class="mt-4 px-4 py-2 bg-bleu text-white rounded-full shadow">
           Réserver
         </button>
       </template>
