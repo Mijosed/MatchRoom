@@ -21,7 +21,7 @@ const toggleMenu = () => {
       </NuxtLink>
 
       <!-- Menu principal -->
-      <nav class="flex items-center gap-6 text-sm text-gray-700">
+      <nav class="font-Lato flex items-center gap-6 text-sm text-gray-700">
         <NuxtLink to="/" class="hover:text-indigo-600">Accueil</NuxtLink>
         <NuxtLink to="/favorites" class="hover:text-indigo-600">Favoris</NuxtLink>
         <NuxtLink to="/negotiations" class="hover:text-indigo-600">Négociations</NuxtLink>

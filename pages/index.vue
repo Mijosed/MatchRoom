@@ -12,7 +12,7 @@ const { hotels } = useHotels()
       <UnlockOffer />
 
   <section class="p-4 space-y-6">
-
+    <h2 class="text-2xl font-bold text-bleu">Les hotels à proximité</h2>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <HotelCard
         v-for="hotel in hotels"

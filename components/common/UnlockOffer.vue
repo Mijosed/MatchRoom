@@ -1,7 +1,7 @@
 <script setup>
 const unlocked = ref(false)
 const dragging = ref(false)
-const progress = ref(0.05)
+const progress = ref(0.06)
 const unlockThreshold = 0.9
 const sliderRef = ref(null)
 let animationFrame
@@ -91,40 +91,23 @@ watch(unlocked, (newValue) => {
         </p>
 
         <div
-          ref="sliderRef"
-          class="relative w-full max-w-sm h-12 bg-white bg-opacity-20 rounded-full overflow-hidden"
-        >
-          <!-- Barre de progression -->
-          <div
-            class="absolute top-0 left-0 h-full bg-white bg-opacity-30 rounded-full transition-all duration-100"
-            :style="{ width: `${progress * 100}%` }"
-          />
+  ref="sliderRef"
+  class="relative w-full max-w-md h-14 bg-[#2E2E2E] border border-bleu rounded-full overflow-hidden px-1"
+>
+  <!-- Curseur draggable -->
+  <div
+    class="absolute top-1/2 -translate-y-1/2 h-12 w-12 bg-bleu rounded-full z-10 flex items-center justify-center text-white text-xl font-bold cursor-pointer transition-all"
+    :style="{ left: `calc(${progress * 100}% - 1.5rem)` }"
+    @mousedown.prevent="startDrag"
+    @touchstart.prevent="startDrag"
+  >
+    <transition name="flip" mode="out-in">
+      <span v-if="progress >= unlockThreshold" key="unlocked">🔓</span>
+      <span v-else key="locked">🔒</span>
+    </transition>
+  </div>
+</div>
 
-          <!-- Cadenas glissable avec padding pour le contenir dans la barre -->
-          <div
-            class="absolute top-0 h-full aspect-square flex items-center justify-center bg-white rounded-full shadow-md text-black text-xl font-bold z-10 cursor-pointer"
-            :class="{ 'bg-green-400': progress >= unlockThreshold }"
-            :style="{ 
-              left: `${progress * 100}%`, 
-              transform: 'translateX(-50%)',
-              transition: dragging ? 'none' : 'all 0.2s ease'
-            }"
-            @mousedown.prevent="startDrag"
-            @touchstart.prevent="startDrag"
-          >
-            <transition name="flip" mode="out-in">
-              <span v-if="progress >= unlockThreshold" key="unlocked" class="text-2xl">🔓</span>
-              <span v-else key="locked" class="text-2xl">🔒</span>
-            </transition>
-          </div>
-          
-          <!-- Texte d'indication -->
-          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span class="text-white text-sm font-medium" :class="{ 'opacity-0': progress > 0.15 }">
-              Glissez →
-            </span>
-          </div>
-        </div>
       </template>
 
       <template v-else>
