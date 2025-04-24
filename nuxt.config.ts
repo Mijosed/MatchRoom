@@ -22,12 +22,7 @@ export default defineNuxtConfig({
     },
   },
 
-  colorMode: {
-    classSuffix: "",
-    preference: "system",
-    fallback: "light",
-    storageKey: "nuxt-color-mode",
-  },
+  
 
   build: {
     transpile: ["@supabase/ssr", "cookie"],

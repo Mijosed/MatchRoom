@@ -10,7 +10,6 @@ const isFavorite = ref(false)
 
 const toggleFavorite = () => {
   isFavorite.value = !isFavorite.value
-  // Tu pourras connecter à Supabase ou localStorage ici
 }
 </script>
 
@@ -23,7 +22,6 @@ const toggleFavorite = () => {
         :alt="hotel.name"
         class="w-full h-48 object-cover"
       />
-      <!-- Icône cœur sans fond -->
       <button
         @click.stop="toggleFavorite"
         class="absolute top-2 right-2 p-1 text-white hover:scale-110 transition transform"
@@ -35,11 +33,22 @@ const toggleFavorite = () => {
       </button>
     </div>
 
+    <!-- Contenu -->
     <div class="p-4 space-y-1">
       <div class="text-sm text-gray-500">{{ hotel.address }}</div>
       <h3 class="text-lg font-semibold truncate">{{ hotel.name }}</h3>
-      <div class="text-sm text-gray-700">
-        À partir de <span class="font-bold">00€</span> / nuit
+
+      <!-- Ligne prix + bouton -->
+      <div class="flex items-center justify-between text-sm text-gray-700 mt-1">
+        <span>
+          À partir de <span class="font-bold">00€</span> / nuit
+        </span>
+        <NuxtLink
+          :to="`/hotels/${hotel.id}`"
+          class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-full hover:bg-indigo-700 transition"
+        >
+          Négocier
+        </NuxtLink>
       </div>
     </div>
   </div>
