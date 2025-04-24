@@ -31,7 +31,7 @@ const toggleMenu = () => {
         <div class="relative">
           <button @click="toggleMenu" class="flex items-center gap-1 hover:text-indigo-600">
             <Icon name="mdi:account-circle" class="w-5 h-5" />
-            <span>{{ user ? 'Mon compte' : 'Connexion' }}</span>
+            <!-- <span>{{ user ? 'Mon compte' : 'Connexion' }}</span> -->
           </button>
 
           <!-- Dropdown -->
@@ -53,13 +53,13 @@ const toggleMenu = () => {
             >Déconnexion</button>
 
             <NuxtLink
-              v-else
+              v-if="!user"
               to="/login"
               class="block px-4 py-2 hover:bg-gray-100"
               @click="showMenu = false"
             >Se connecter</NuxtLink>
             <NuxtLink
-              v-else
+              v-if="!user"
               to="/register"
               class="block px-4 py-2 hover:bg-gray-100"
               @click="showMenu = false"
