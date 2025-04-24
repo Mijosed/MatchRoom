@@ -45,7 +45,7 @@ onUnmounted(() => {
 
       <!-- Menu principal -->
       <nav class="font-Lato flex items-center gap-6 text-sm text-gray-700">
-        <NuxtLink to="/" class="hover:text-bleu">Accueil</NuxtLink>
+        <NuxtLink to="/offers" class="hover:text-bleu">Nos offres</NuxtLink>
         <NuxtLink to="/favorites" class="hover:text-bleu">Favoris</NuxtLink>
         <NuxtLink to="/negotiations" class="hover:text-bleu">Négociations</NuxtLink>
         <NuxtLink to="/bookings" class="hover:text-bleu">Réservations</NuxtLink>
