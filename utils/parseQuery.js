@@ -1,23 +1,20 @@
 export function parseQuery(query) {
+  // Vérifier si query est défini
+  if (!query) return null
+
   const normalizedQuery = query.toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') 
   
   const villes = ['nice', 'paris', 'lyon']
-  const equipementsConnus = ['spa', 'piscine', 'wifi', 'restaurant', 'parking']
   
-  const ville = villes.find(v => normalizedQuery.includes(v))
+  // On ne cherche plus que la ville
+  debugger;
+  const ville = villes.find(v => normalizedQuery === v)
   
-  const equipements = equipementsConnus.filter(eq => 
-    normalizedQuery.includes(eq)
-  )
-
-  if (!ville && !equipements.length) {
+  if (!ville) {
     return null
   }
   
-  return {
-    ville,
-    equipements
-  }
+  return { ville }
 }

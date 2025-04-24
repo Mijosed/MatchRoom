@@ -5,26 +5,11 @@ export function useSearch() {
   const results = ref([])
   const loading = ref(false)
 
-  const search = async () => {
-    try {
-      if (!query.value.trim()) {
-        results.value = []
-        return
-      }
-      
-      loading.value = true
-      const response = await $fetch('/api/search', {
-        params: { q: query.value }
-      })
-      
-      results.value = Array.isArray(response) ? response : []
-      
-    } catch (error) {
-      console.error('Erreur de recherche:', error)
-      results.value = []
-    } finally {
-      loading.value = false
-    }
+  const search = async (params) => {
+    console.log('useSearch appelé avec:', params)
+    const response = await fetch(`/api/search?${new URLSearchParams(params)}`)
+    console.log('Réponse API:', response)
+    return response.json()
   }
 
   return { 
