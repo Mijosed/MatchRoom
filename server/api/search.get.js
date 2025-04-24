@@ -6,14 +6,16 @@ export default defineEventHandler(async (event) => {
     const { q } = getQuery(event)
     if (!q) return []
 
-    const { ville, equipements } = parseQuery(q)
+    const parsedQuery = parseQuery(q)
+    
+    if (!parsedQuery) return []
+
+    const { ville, equipements } = parsedQuery
     
     return hotels.filter(hotel => {
-      // Match de la ville (si spécifiée)
       const matchVille = !ville || 
         hotel.ville.toLowerCase() === ville.toLowerCase()
 
-      // Match des équipements (si spécifiés)
       const matchEquipements = equipements.length === 0 || 
         equipements.every(eq => 
           hotel.equipements.map(e => e.toLowerCase())

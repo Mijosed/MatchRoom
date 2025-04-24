@@ -4,8 +4,6 @@ export function parseQuery(query) {
     .replace(/[\u0300-\u036f]/g, '') 
   
   const villes = ['nice', 'paris', 'lyon']
-  
-  
   const equipementsConnus = ['spa', 'piscine', 'wifi', 'restaurant', 'parking']
   
   const ville = villes.find(v => normalizedQuery.includes(v))
@@ -13,6 +11,10 @@ export function parseQuery(query) {
   const equipements = equipementsConnus.filter(eq => 
     normalizedQuery.includes(eq)
   )
+
+  if (!ville && !equipements.length) {
+    return null
+  }
   
   return {
     ville,

@@ -11,6 +11,27 @@
           @keyup.enter="handleSearch"
         />
         
+        <!-- Recherches récentes -->
+        <div v-if="recentSearches.length > 0" class="mt-2 space-y-1">
+          <div class="text-sm text-gray-500 mb-1">Recherches récentes :</div>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="search in recentSearches"
+              :key="search.id"
+              class="group flex items-center gap-1 text-sm bg-gray-100 hover:bg-gray-200 rounded px-2 py-1"
+              @click="useRecentSearch(search)"
+            >
+              {{ search.query }}
+              <span 
+                class="opacity-0 group-hover:opacity-100 text-red-500 cursor-pointer"
+                @click.stop="removeSearch(search.id)"
+              >
+                ×
+              </span>
+            </button>
+          </div>
+        </div>
+
         <button 
           class="mt-2 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
           @click="handleSearch"
@@ -20,8 +41,13 @@
         </button>
       </div>
 
+      <!-- Résultats ou message "Aucun résultat" -->
       <div class="mt-4">
-        <ul class="space-y-4">
+        <div v-if="hasSearched && !results.length" class="text-center py-8 text-gray-500">
+          Aucun hôtel ne correspond à votre recherche
+        </div>
+        
+        <ul v-else-if="results.length" class="space-y-4">
           <li 
             v-for="hotel in results" 
             :key="hotel.id"
@@ -77,16 +103,27 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useSearch } from '@/composables/useSearch'
+import { useRecentSearches } from '@/composables/useRecentSearches'
 
 const { query, results, loading, search } = useSearch()
+const { recentSearches, addSearch, removeSearch } = useRecentSearches()
+const hasSearched = ref(false)
 
 const map = ref(null)
 const zoom = ref(13)
 const center = ref([43.7032932, 7.2658348]) // Centre par défaut sur Nice
 
-const handleSearch = () => {
+const handleSearch = async () => {
   if (!query.value?.trim()) return
-  search()
+  addSearch(query.value)
+  await search()
+  hasSearched.value = true
+}
+
+const useRecentSearch = async (search) => {
+  query.value = search.query
+  await search()
+  hasSearched.value = true
 }
 
 const centerMap = (location) => {
@@ -99,7 +136,3 @@ const selectHotel = (hotel) => {
 }
 </script>
 
-<style>
-/* Assurez-vous d'avoir les styles Leaflet */
-@import 'leaflet/dist/leaflet.css';
-</style>

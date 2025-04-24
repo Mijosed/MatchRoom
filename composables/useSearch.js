@@ -7,13 +7,18 @@ export function useSearch() {
 
   const search = async () => {
     try {
-      if (!query.value.trim()) return
+      if (!query.value.trim()) {
+        results.value = []
+        return
+      }
       
       loading.value = true
       const response = await $fetch('/api/search', {
         params: { q: query.value }
       })
-      results.value = response
+      
+      results.value = Array.isArray(response) ? response : []
+      
     } catch (error) {
       console.error('Erreur de recherche:', error)
       results.value = []
