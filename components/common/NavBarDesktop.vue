@@ -1,14 +1,38 @@
 <script setup>
 import { useAuth } from '~/composables/useAuth'
 import { useRouter } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
 
 const { user, signOut } = useAuth()
 const router = useRouter()
 const showMenu = ref(false)
+const menuRef = ref(null)
+const buttonRef = ref(null)
 
 const toggleMenu = () => {
   showMenu.value = !showMenu.value
 }
+
+// Fonction pour gérer les clics en dehors du menu
+const handleClickOutside = (event) => {
+  if (showMenu.value && 
+      menuRef.value && 
+      !menuRef.value.contains(event.target) &&
+      buttonRef.value && 
+      !buttonRef.value.contains(event.target)) {
+    showMenu.value = false
+  }
+}
+
+// Ajouter l'écouteur de clic global quand le composant est monté
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+// Supprimer l'écouteur quand le composant est démonté
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
@@ -16,20 +40,23 @@ const toggleMenu = () => {
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 h-16">
       <!-- Logo Nuxt -->
       <NuxtLink to="/" class="flex items-center gap-2">
-        <Icon name="logos:nuxt-icon" class="w-8 h-8 text-green-600" />
-        <span class="text-xl font-bold text-indigo-600 hover:text-indigo-700">MatchRoom</span>
+      <img src="/logo.png" alt="Logo" class="w-16 h-16">
       </NuxtLink>
 
       <!-- Menu principal -->
-      <nav class="flex items-center gap-6 text-sm text-gray-700">
-        <NuxtLink to="/" class="hover:text-indigo-600">Accueil</NuxtLink>
-        <NuxtLink to="/favorites" class="hover:text-indigo-600">Favoris</NuxtLink>
-        <NuxtLink to="/negotiations" class="hover:text-indigo-600">Négociations</NuxtLink>
-        <NuxtLink to="/bookings" class="hover:text-indigo-600">Réservations</NuxtLink>
+      <nav class="font-Lato flex items-center gap-6 text-sm text-gray-700">
+        <NuxtLink to="/" class="hover:text-bleu">Accueil</NuxtLink>
+        <NuxtLink to="/favorites" class="hover:text-bleu">Favoris</NuxtLink>
+        <NuxtLink to="/negotiations" class="hover:text-bleu">Négociations</NuxtLink>
+        <NuxtLink to="/bookings" class="hover:text-bleu">Réservations</NuxtLink>
 
         <!-- Menu utilisateur -->
         <div class="relative">
-          <button @click="toggleMenu" class="flex items-center gap-1 hover:text-indigo-600">
+          <button 
+            ref="buttonRef"
+            @click.stop="toggleMenu" 
+            class="flex items-center gap-1 hover:text-bleu"
+          >
             <Icon name="mdi:account-circle" class="w-5 h-5" />
             <!-- <span>{{ user ? 'Mon compte' : 'Connexion' }}</span> -->
           </button>
@@ -37,6 +64,7 @@ const toggleMenu = () => {
           <!-- Dropdown -->
           <div
             v-if="showMenu"
+            ref="menuRef"
             class="absolute right-0 mt-2 w-40 bg-white border rounded shadow text-sm z-50"
           >
             <NuxtLink
@@ -45,6 +73,8 @@ const toggleMenu = () => {
               class="block px-4 py-2 hover:bg-gray-100"
               @click="showMenu = false"
             >Profil</NuxtLink>
+
+            <NuxtLink to="/admin" class="block px-4 py-2 hover:bg-gray-100">Administration</NuxtLink>
 
             <button
               v-if="user"

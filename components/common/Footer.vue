@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
       <!-- Logo & description -->
       <div>
-        <div class="text-xl font-bold text-indigo-600 mb-2">MatchRoom</div>
+        <img src="/logo.png" alt="Logo" class="w-16 h-16">
         <p>Découvrez les meilleures offres d'hôtels selon la saison, vos envies et votre localisation.</p>
       </div>
 
@@ -23,9 +23,9 @@
       <div>
         <h4 class="font-semibold mb-2">Suivez-nous</h4>
         <div class="flex gap-4 text-gray-500">
-          <Icon name="mdi:facebook" class="w-5 h-5 hover:text-indigo-600 cursor-pointer" />
-          <Icon name="mdi:twitter" class="w-5 h-5 hover:text-indigo-600 cursor-pointer" />
-          <Icon name="mdi:instagram" class="w-5 h-5 hover:text-indigo-600 cursor-pointer" />
+          <Icon name="mdi:facebook" class="w-5 h-5 hover:text-bleu cursor-pointer" />
+          <Icon name="mdi:twitter" class="w-5 h-5 hover:text-bleu cursor-pointer" />
+          <Icon name="mdi:instagram" class="w-5 h-5 hover:text-bleu cursor-pointer" />
         </div>
       </div>
     </div>

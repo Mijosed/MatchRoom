@@ -20,6 +20,8 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       Montserrat: true,
+      "Bricolage Grotesque": true,
+      Lato: true,
     },
   },
 

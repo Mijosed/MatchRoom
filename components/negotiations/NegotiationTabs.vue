@@ -19,7 +19,7 @@ const selectTab = (tab) => {
       @click="selectTab(tab)"
       :class="[
         'px-4 py-2 rounded-full text-sm font-medium',
-        modelValue === tab ? 'bg-blue-900 text-white' : 'bg-gray-100 text-gray-600'
+        modelValue === tab ? 'bg-bleu text-white' : 'bg-gray-100 text-gray-600'
       ]"
     >
       {{ tab }}

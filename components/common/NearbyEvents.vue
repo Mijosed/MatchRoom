@@ -25,7 +25,7 @@ const events = [
 
 <template>
   <section class="px-4">
-    <h2 class="text-xl font-semibold mb-4">Événements à proximité</h2>
+    <h2 class="text-bleu font-semibold mb-4">Événements à proximité</h2>
 
     <div class="overflow-x-auto no-scrollbar">
       <div class="flex gap-4 pb-2">
