@@ -1,10 +1,24 @@
-<script setup>
-const client = useSupabaseClient()
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const email = ref('')
 const password = ref('')
-const errorMsg = ref(null)
-const successMsg = ref(null)
+const errorMsg = ref('')
+const successMsg = ref('')
+const router = useRouter()
+
+const client = useSupabaseClient()
 
 const signup = async () => {
   const { data, error } = await client.auth.signUp({
@@ -14,37 +28,51 @@ const signup = async () => {
 
   if (error) {
     errorMsg.value = error.message
-    successMsg.value = null
+    successMsg.value = ''
   } else {
     successMsg.value = 'Un e-mail de confirmation vous a été envoyé.'
-    errorMsg.value = null
+    errorMsg.value = ''
   }
 }
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center bg-gray-50">
-    <div class="w-full max-w-md p-6 bg-white rounded-xl shadow">
-      <h1 class="text-2xl font-bold mb-4 text-center">Créer un compte</h1>
-      <form @submit.prevent="signup" class="space-y-4">
-        <input
-          v-model="email"
-          type="email"
-          placeholder="Email"
-          class="w-full border rounded px-4 py-2"
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Mot de passe"
-          class="w-full border rounded px-4 py-2"
-        />
-        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">
-          S'inscrire
-        </button>
+  <Card class="mx-auto max-w-sm">
+    <CardHeader>
+      <CardTitle class="text-2xl">Créer un compte</CardTitle>
+      <CardDescription>
+        Entrez votre email ci-dessous pour créer votre compte
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <form @submit.prevent="signup" class="grid gap-4">
+        <div class="grid gap-2">
+          <Label for="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            v-model="email"
+            required
+          />
+        </div>
+        <div class="grid gap-2">
+          <Label for="password">Mot de passe</Label>
+          <Input
+            id="password"
+            type="password"
+            v-model="password"
+            required
+          />
+        </div>
+        <Button type="submit" class="w-full bg-[#457891]">S'inscrire</Button>
+        <p v-if="errorMsg" class="text-sm text-red-500">{{ errorMsg }}</p>
+        <p v-if="successMsg" class="text-sm text-green-600">{{ successMsg }}</p>
       </form>
-      <p v-if="errorMsg" class="text-red-500 mt-4 text-sm">{{ errorMsg }}</p>
-      <p v-if="successMsg" class="text-green-600 mt-4 text-sm">{{ successMsg }}</p>
-    </div>
-  </div>
+      <div class="mt-4 text-center text-sm">
+        Vous avez déjà un compte ?
+        <RouterLink to="/login" class="underline">Connectez-vous</RouterLink>
+      </div>
+    </CardContent>
+  </Card>
 </template>

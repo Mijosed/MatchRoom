@@ -1,18 +1,31 @@
 <script setup>
 const unlocked = ref(false)
 const dragging = ref(false)
-const progress = ref(0)
+const progress = ref(0.05)
 const unlockThreshold = 0.9
 const sliderRef = ref(null)
 let animationFrame
+let startX = 0
+let lastX = 0
 
 const startDrag = (e) => {
+  e.preventDefault()
   dragging.value = true
   const bar = sliderRef.value
+  const rect = bar.getBoundingClientRect()
+  
+  // Capture la position initiale
+  startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX
+  lastX = startX
 
   const move = (event) => {
+    // Empêcher le défilement de la page lors du glissement
+    event.preventDefault()
+    
+    // Obtenir la position actuelle
     const clientX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX
-    const rect = bar.getBoundingClientRect()
+    lastX = clientX
+    
     const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1)
     progress.value = percent
 
@@ -26,7 +39,7 @@ const startDrag = (e) => {
     dragging.value = false
     window.removeEventListener('mousemove', move)
     window.removeEventListener('mouseup', stopDrag)
-    window.removeEventListener('touchmove', move)
+    window.removeEventListener('touchmove', move, { passive: false })
     window.removeEventListener('touchend', stopDrag)
 
     if (!unlocked.value && progress.value < unlockThreshold) {
@@ -36,22 +49,29 @@ const startDrag = (e) => {
 
   window.addEventListener('mousemove', move)
   window.addEventListener('mouseup', stopDrag)
-  window.addEventListener('touchmove', move)
+  window.addEventListener('touchmove', move, { passive: false })
   window.addEventListener('touchend', stopDrag)
 }
 
 const animateBack = () => {
   cancelAnimationFrame(animationFrame)
   const animate = () => {
-    if (progress.value > 0) {
-      progress.value -= 0.02
+    if (progress.value > 0.05) {
+      progress.value -= 0.05
       animationFrame = requestAnimationFrame(animate)
     } else {
-      progress.value = 0
+      progress.value = 0.05
     }
   }
   animate()
 }
+
+// Surveiller les changements de statut pour les animations
+watch(unlocked, (newValue) => {
+  if (newValue) {
+    // Aucune animation nécessaire si déjà déverrouillé
+  }
+})
 </script>
 
 <template>
@@ -67,27 +87,42 @@ const animateBack = () => {
     <div class="relative z-10 h-full w-full flex flex-col justify-center items-center text-white px-4">
       <template v-if="!unlocked">
         <p class="mb-6 text-lg font-semibold text-center">
-          Faites glisser pour découvrir l’offre du jour
+          Faites glisser pour découvrir l'offre du jour
         </p>
 
         <div
           ref="sliderRef"
           class="relative w-full max-w-sm h-12 bg-white bg-opacity-20 rounded-full overflow-hidden"
         >
-          <!-- Barre de fond -->
+          <!-- Barre de progression -->
           <div
             class="absolute top-0 left-0 h-full bg-white bg-opacity-30 rounded-full transition-all duration-100"
             :style="{ width: `${progress * 100}%` }"
           />
 
-          <!-- Cadenas glissable -->
+          <!-- Cadenas glissable avec padding pour le contenir dans la barre -->
           <div
-            class="absolute top-0 h-full w-12 flex items-center justify-center text-black text-xl font-bold z-10 cursor-pointer"
-            :style="{ transform: `translateX(calc(${progress * 100}% - 0))`, transition: dragging ? 'none' : 'transform 0.2s ease' }"
-            @mousedown="startDrag"
-            @touchstart="startDrag"
+            class="absolute top-0 h-full aspect-square flex items-center justify-center bg-white rounded-full shadow-md text-black text-xl font-bold z-10 cursor-pointer"
+            :class="{ 'bg-green-400': progress >= unlockThreshold }"
+            :style="{ 
+              left: `${progress * 100}%`, 
+              transform: 'translateX(-50%)',
+              transition: dragging ? 'none' : 'all 0.2s ease'
+            }"
+            @mousedown.prevent="startDrag"
+            @touchstart.prevent="startDrag"
           >
-            {{ progress >= unlockThreshold ? '🔓' : '🔒' }}
+            <transition name="flip" mode="out-in">
+              <span v-if="progress >= unlockThreshold" key="unlocked" class="text-2xl">🔓</span>
+              <span v-else key="locked" class="text-2xl">🔒</span>
+            </transition>
+          </div>
+          
+          <!-- Texte d'indication -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span class="text-white text-sm font-medium" :class="{ 'opacity-0': progress > 0.15 }">
+              Glissez →
+            </span>
           </div>
         </div>
       </template>
@@ -102,3 +137,13 @@ const animateBack = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.flip-enter-active, .flip-leave-active {
+  transition: all 0.3s ease;
+}
+.flip-enter-from, .flip-leave-to {
+  transform: rotateY(90deg);
+  opacity: 0;
+}
+</style>
