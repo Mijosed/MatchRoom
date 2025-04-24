@@ -4,11 +4,11 @@
       class="bg-white rounded-full shadow-sm px-4 py-2 flex items-center gap-2 cursor-pointer"
       @click="openModal"
     >
-      <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
-      <input
+    <Icon name="mdi:magnify" class="w-5 h-5 text-gray-500" />
+    <input
         readonly
-        type="text"
-        placeholder="Rechercher un hôtel, une ville…"
+      type="text"
+      placeholder="Rechercher un hôtel, une ville…"
         class="w-full outline-none bg-transparent text-sm cursor-pointer"
       />
     </div>
@@ -104,7 +104,7 @@
                   @click="selectHotel(hotel)"
                 >
                   <h3 class="font-semibold text-lg">{{ hotel.name }}</h3>
-                  <p class="text-gray-600">{{ hotel.location.address }}</p>
+                  <p class="text-gray-600">{{ hotel.address }}</p>
                   <p class="text-sm text-gray-500 mt-1">
                     {{ hotel.equipements.join(' • ') }}
                   </p>

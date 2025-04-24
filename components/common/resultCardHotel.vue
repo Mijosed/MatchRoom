@@ -50,7 +50,7 @@ const props = defineProps({
             <p class="text-sm text-gray-500">par nuit</p>
           </div>
           <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-            Voir l'offre
+            négocier
           </button>
         </div>
       </div>

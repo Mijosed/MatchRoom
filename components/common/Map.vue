@@ -13,7 +13,6 @@ const props = defineProps({
   }
 })
 
-// Coordonnées par défaut des villes
 const CITY_COORDINATES = {
   'nice': { lat: 43.7102, lng: 7.2620, zoom: 13 },
   'paris': { lat: 48.8566, lng: 2.3522, zoom: 12 },
@@ -30,48 +29,50 @@ const initMap = () => {
     const cityName = props.city.toLowerCase()
     const coords = CITY_COORDINATES[cityName] || { lat: 46.603354, lng: 1.888334, zoom: 6 }
 
-    // Si la carte existe déjà, on la supprime
     if (map) {
       map.remove()
     }
 
-    // Initialiser la carte
     map = L.map('map').setView([coords.lat, coords.lng], coords.zoom)
 
-    // Ajouter le layer OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map)
 
-    // Nettoyer les anciens marqueurs
     markers.forEach(marker => marker.remove())
     markers = []
 
-    // Ajouter les marqueurs pour chaque hôtel
-    props.hotels.forEach(hotel => {
-      if (hotel.location?.lat && hotel.location?.lng) {
-        const marker = L.marker([hotel.location.lat, hotel.location.lng])
-          .bindPopup(`
-            <div class="p-2">
-              <h3 class="font-semibold">${hotel.name}</h3>
-              <p class="text-sm text-gray-600">${hotel.adresse}</p>
-              <p class="text-sm font-bold text-blue-600 mt-1">${hotel.prix}€ / nuit</p>
-            </div>
-          `)
-          .addTo(map)
-        
-        markers.push(marker)
+    props.hotels.forEach((hotel) => {
+      if (!hotel.location?.lat || !hotel.location?.lng) return
+
+      const lat = typeof hotel.location.lat === 'string' ? parseFloat(hotel.location.lat) : hotel.location.lat
+      const lng = typeof hotel.location.lng === 'string' ? parseFloat(hotel.location.lng) : hotel.location.lng
+
+      if (Number.isFinite(lat) && Number.isFinite(lng)) {
+        try {
+          const marker = L.marker([lat, lng])
+            .bindPopup(`
+              <div class="p-2">
+                <h3 class="font-semibold">${hotel.name}</h3>
+                <p class="text-sm text-gray-600">${hotel.adresse}</p>
+                <p class="text-sm font-bold text-blue-600 mt-1">${hotel.prix}€ / nuit</p>
+              </div>
+            `)
+            .addTo(map)
+          
+          markers.push(marker)
+        } catch (error) {
+          console.error(`Erreur lors de la création du marqueur pour ${hotel.name}:`, error)
+        }
       }
     })
   }
 }
 
-// Initialiser la carte au montage
 onMounted(() => {
   initMap()
 })
 
-// Réinitialiser la carte quand la ville ou les hôtels changent
 watch([() => props.city, () => props.hotels], () => {
   initMap()
 })
