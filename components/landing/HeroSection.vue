@@ -9,7 +9,7 @@
         class="h-full"
       >
         <SwiperSlide v-for="(img, i) in images" :key="i">
-          <img :src="img" class="w-full h-full object-cover" />
+          <img :src="img" class="w-full h-full object-cover opacity-50" /> <!-- J'aimerais mettre un effet transparent sur l'image -->
         </SwiperSlide>
       </Swiper>
       <div class="absolute inset-0 bg-bleu bg-opacity-50 backdrop-blur-sm" />
@@ -24,14 +24,14 @@
 
       <div class="flex gap-4 flex-wrap justify-center">
         <button
-          @click="$emit('scrollTo', 'features')"
-          class="bg-orange text-white px-6 py-3 rounded-full text-lg hover:brightness-110 transition"
+          @click="router.push('/offers')"
+          class="bg-orange text-white px-6 py-3 rounded-full text-lg hover:brightness-110 transition shadow-lg "
         >
-          Découvrir l’expérience
+          Découvrir l'expérience
         </button>
         <button
-          @click="$emit('openSignup')"
-          class="bg-white text-bleu px-6 py-3 rounded-full text-lg hover:bg-gray-100 transition"
+          @click="router.push('/register')"
+          class="bg-white text-bleu px-6 py-3 rounded-full text-lg hover:bg-gray-100 transition shadow-lg"
         >
           S'inscrire
         </button>
@@ -44,6 +44,11 @@
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
+//router
+import { useRouter } from 'vue-router'
+
+// Initialiser le router correctement
+const router = useRouter()
 
 const images = [
   'https://picsum.photos/id/1036/1200/800',
