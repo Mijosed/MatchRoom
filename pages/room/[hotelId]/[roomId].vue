@@ -36,7 +36,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="">
     <div v-if="loading" class="text-center">
       <p class="text-gray-500">Chargement des détails...</p>
     </div>
@@ -45,7 +45,7 @@ onMounted(async () => {
       <p class="text-red-500">Chambre non trouvée</p>
     </div>
 
-    <div v-else class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div v-else class="bg-white shadow-lg overflow-hidden">
       <div class="relative">
         <!-- Carousel principal -->
         <div class="relative h-96">
@@ -142,4 +142,5 @@ onMounted(async () => {
 .carousel-leave-to {
   opacity: 0;
 }
+
 </style> 
