@@ -1,11 +1,15 @@
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-03-31.basil",
-});
-
 export default defineEventHandler(async (event) => {
+  if (!process.server) return;
+
+  const { default: Stripe } = await import("stripe");
+  const config = useRuntimeConfig();
+
+  const stripe = new Stripe(config.stripeSecretKey, {
+    apiVersion: "2025-03-31.basil",
+  });
+
   const body = await readBody(event);
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
