@@ -17,7 +17,7 @@ const user = useSupabaseUser()
 
 const logout = async () => {
   await client.auth.signOut()
-  router.push('/')
+  router.push('/offers')
 }
 
 const goToSettings = () => {

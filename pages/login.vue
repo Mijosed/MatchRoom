@@ -28,7 +28,7 @@ const login = async () => {
   if (error) {
     errorMsg.value = error.message
   } else {
-    router.push('/')
+    router.push('/offers')
   }
 }
 </script>
