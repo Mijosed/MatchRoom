@@ -67,10 +67,10 @@ const backToSite = () => {
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-10 hidden w-64 flex-col border-r bg-background sm:flex">
             <!-- Logo -->
-            <div class="flex items-center p-4 border-b">
-                <NuxtLink to="/admin" class="flex items-center gap-2 font-semibold text-xl">
+            <div class="flex items-center p-3 border-b">
+                <NuxtLink to="/admin" class="flex items-center gap-2 font-semibold text-2xl">
                     <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-2">
-                    <span class="text-bleu font-bold">MatchRoom Admin</span>
+                    <span class="text-bleu font-bold">Admin</span>
                 </NuxtLink>
             </div>
 
@@ -195,10 +195,10 @@ const backToSite = () => {
                 <!-- Contenu de la sidebar mobile - reprend la même structure -->
                 <div class="flex flex-col h-full">
                     <!-- Logo -->
-                    <div class="flex items-center p-4 border-b">
+                    <div class="flex items-center p-3 border-b">
                         <div class="flex items-center gap-2 font-semibold text-xl">
-                            <Store class="h-6 w-6 text-primary" />
-                            <span>MatchRoom Admin</span>
+                            <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-2">
+                            <span class="text-bleu font-bold">Admin</span>
                         </div>
                     </div>
 
