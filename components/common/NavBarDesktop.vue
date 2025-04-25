@@ -40,7 +40,7 @@ onUnmounted(() => {
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 h-16">
       <!-- Logo Nuxt -->
       <NuxtLink to="/" class="flex items-center gap-2">
-      <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-2 ">
+      <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-4 ">
       </NuxtLink>
 
       <!-- Menu principal -->
