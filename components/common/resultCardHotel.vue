@@ -12,57 +12,62 @@ const props = defineProps({
 
 
 const goToNegotiation = () => {
-  router.push(`/negotiation/${props.hotel.id}`);
+  router.push(`/room/${props.hotel.id}`);
 };
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-    <div class="flex flex-col md:flex-row">
-      <div class="w-full md:w-1/3 h-64 md:h-auto relative">
-        <img 
-          :src="hotel.photo || '/images/hotel-placeholder.jpg'" 
-          :alt="hotel.name"
-          class="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
-        />
-        <button class="absolute top-4 right-4 text-white hover:scale-110 transition-transform">
-          <Icon name="mdi:heart-outline" class="w-6 h-6"/>
-        </button>
+  <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <div class="relative">
+      <img 
+        :src="hotel.photo || '/images/hotel-placeholder.jpg'" 
+        :alt="hotel.name"
+        class="w-full h-48 object-cover rounded-t-lg"
+      />
+      <button class="absolute top-4 right-4 text-white hover:scale-110 transition-transform">
+        <Icon name="mdi:heart-outline" class="w-6 h-6"/>
+      </button>
+    </div>
+
+    <div class="p-4 bg-[#457891] rounded-b-lg text-white">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-white">{{ hotel.name }}</h3>
+          <p class="text-sm text-white opacity-90">{{ hotel.address }}</p>
+        </div>
+        <div class="text-right">
+          <p class="font-semibold text-white">{{ hotel.price || '250€' }}/nuit</p>
+          <p class="text-sm text-white opacity-90">{{ hotel.total || '1000€ total' }}</p>
+        </div>
       </div>
 
-      <div class="flex-1 p-6 flex flex-col justify-between">
-        <div>
-          <div class="mb-4">
-            <h3 class="text-xl font-semibold mb-2">{{ hotel.name }}</h3>
-            <p class="text-gray-600 text-sm">{{ hotel.address }}</p>
-          </div>
-
-          <p class="text-gray-700 mb-4">{{ hotel.description }}</p>
-
-          <div v-if="hotel.tags && hotel.tags.length > 0" class="flex flex-wrap gap-2 mb-4">
-            <span 
-              v-for="tag in hotel.tags" 
-              :key="tag"
-              class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
-            >
-              {{ tag }}
-            </span>
-          </div>
-        </div>
-
-        <div class="flex items-end justify-between mt-4">
-          <div>
-            <p class="text-sm text-gray-500">À partir de</p>
-            <p class="text-sm text-gray-500">par nuit</p>
-          </div>
-          <button 
-            @click="goToNegotiation"
-            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+      <div class="flex justify-between items-center">
+        <div v-if="hotel.tags && hotel.tags.length > 0" class="flex flex-wrap gap-2">
+          <span 
+            v-for="tag in hotel.tags" 
+            :key="tag"
+            class="px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs text-white"
           >
-            négocier
-          </button>
+            {{ tag }}
+          </span>
         </div>
+        <button 
+          @click="goToNegotiation"
+          class="px-4 py-2 bg-white text-[#457891] rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+        >
+          Afficher les chambres
+        </button>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.hotel-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hotel-card:hover {
+  transform: translateY(-2px);
+}
+</style>

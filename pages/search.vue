@@ -1,20 +1,37 @@
 <template>
-  <div class="container mx-auto p-4">
-    <Map 
-      v-if="results.length > 0"
-      :city="city"
-      :hotels="results"
-      class="mb-8"
-    />
-
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold">Résultats de recherche</h1>
-      <div class="text-gray-600">
-        {{ searchSummary }}
+  <div class="relative">
+    <!-- Map avec overlay -->
+    <div class="relative h-[400px]">
+      <Map 
+        v-if="results.length > 0"
+        :city="city"
+        :hotels="results"
+        class="w-full h-full"
+      />
+      
+      <!-- Overlay de recherche -->
+      <div class="absolute top-4 left-4 right-4 z-10">
+        <div class="bg-white rounded-full shadow-lg p-2 flex items-center gap-4 flex-wrap">
+          <div class="flex-1 flex items-center gap-2 px-4">
+            <span class="font-medium">{{ city }}</span>
+            <span class="text-gray-400">|</span>
+            <span class="text-gray-600">
+              {{ formatDateRange(route.query.startDate, route.query.endDate) }}
+            </span>
+            <span class="text-gray-400">|</span>
+            <div class="flex items-center gap-1 text-gray-600">
+              <span>{{ formatTravelers() }}</span>
+              <Icon name="mdi:account-group" class="w-5 h-5" />
+            </div>
+          </div>
+        </div>
       </div>
+
+      
     </div>
 
-    <div class="w-full">
+    <!-- Résultats -->
+    <div class="container mx-auto px-4 py-6">
       <div v-if="loading" class="text-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
         <p class="mt-2 text-gray-600">Chargement des résultats...</p>
@@ -36,15 +53,17 @@
         </button>
       </div>
       
-      <div v-else class="grid gap-6">
-        <p class="text-gray-600 mb-4">
+      <div v-else>
+        <p class="text-gray-600 mb-6">
           {{ results.length }} hôtel{{ results.length > 1 ? 's' : '' }} trouvé{{ results.length > 1 ? 's' : '' }}
         </p>
-        <ResultCardHotel 
-          v-for="hotel in results" 
-          :key="hotel.id" 
-          :hotel="hotel"
-        />
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <ResultCardHotel 
+            v-for="hotel in results" 
+            :key="hotel.id" 
+            :hotel="hotel"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -61,6 +80,20 @@ const { search } = useSearch()
 const loading = ref(true)
 const results = ref([])
 
+// Formater la plage de dates
+const formatDateRange = (startDate, endDate) => {
+  if (!startDate || !endDate) return ''
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  return `${start.getDate()} avr. - ${end.getDate()} avr.`
+}
+
+// Formater le nombre de voyageurs
+const formatTravelers = () => {
+  const total = Number(route.query.adults) + Number(route.query.children) + Number(route.query.babies)
+  return `${total}`
+}
+
 const loadResults = async () => {
   loading.value = true
   try {
@@ -75,7 +108,6 @@ const loadResults = async () => {
       city,
       startDate: route.query.startDate,
       endDate: route.query.endDate,
-      flexibility: Number(route.query.flexibility),
       adults: Number(route.query.adults),
       children: Number(route.query.children),
       babies: Number(route.query.babies),
@@ -90,24 +122,6 @@ const loadResults = async () => {
     loading.value = false
   }
 }
-
-const searchSummary = computed(() => {
-  const city = route.query.city?.split(',')[0] ?? ''
-  if (!city) return ''
-  
-  const dates = route.query.startDate && route.query.endDate
-    ? `du ${new Date(route.query.startDate).toLocaleDateString()} au ${new Date(route.query.endDate).toLocaleDateString()}`
-    : ''
-    
-  const travelers = [
-    Number(route.query.adults) > 0 && `${route.query.adults} adulte${Number(route.query.adults) > 1 ? 's' : ''}`,
-    Number(route.query.children) > 0 && `${route.query.children} enfant${Number(route.query.children) > 1 ? 's' : ''}`,
-    Number(route.query.babies) > 0 && `${route.query.babies} bébé${Number(route.query.babies) > 1 ? 's' : ''}`,
-    Number(route.query.pets) > 0 && `${route.query.pets} animal${Number(route.query.pets) > 1 ? 'aux' : ''}`
-  ].filter(Boolean).join(', ')
-
-  return [city, dates, travelers].filter(Boolean).join(' - ')
-})
 
 const resetSearch = () => {
   router.push('/')
@@ -124,3 +138,20 @@ onMounted(() => {
 
 const city = computed(() => route.query.city?.split(',')[0].trim() ?? '')
 </script>
+
+<style scoped>
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+</style>
