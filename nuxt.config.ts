@@ -65,6 +65,11 @@ export default defineNuxtConfig({
             ...(page.meta || {}), 
             layout: 'admin' 
           }
+        } else if (page.path.startsWith('/owner')) {
+          page.meta = { 
+            ...(page.meta || {}), 
+            layout: 'owner' 
+          }
         }
       })
     }

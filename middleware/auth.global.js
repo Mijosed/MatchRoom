@@ -1,6 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const protectedRoutes = ['/admin']
-    if (protectedRoutes.some(route => to.path.startsWith(route))) {
+    const protectedRoutes = {
+        '/admin': 'admin',
+        '/owner': 'owner'
+    }
+
+    const matchingRoute = Object.keys(protectedRoutes).find(route => to.path.startsWith(route))
+    if (matchingRoute) {
         const supabase = useSupabaseClient()
         const nuxtUser = useSupabaseUser()
 
@@ -23,8 +28,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return navigateTo('/login')
         }
 
-        if (profile.role === 'client') {
-            return navigateTo('/')
+        const requiredRole = protectedRoutes[matchingRoute]
+        if (profile.role !== requiredRole) {
+            return navigateTo(profile.role === 'client' ? '/' : `/${profile.role}`)
         }
     }
 })

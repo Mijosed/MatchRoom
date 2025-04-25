@@ -1,19 +1,21 @@
 <script setup>
 import { useAuth } from '~/composables/useAuth'
 import { useRouter } from 'vue-router'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 
 const { user, signOut } = useAuth()
 const router = useRouter()
 const showMenu = ref(false)
 const menuRef = ref(null)
 const buttonRef = ref(null)
+const userRole = ref(null)
+
+const client = useSupabaseClient()
 
 const toggleMenu = () => {
   showMenu.value = !showMenu.value
 }
 
-// Fonction pour gérer les clics en dehors du menu
 const handleClickOutside = (event) => {
   if (showMenu.value && 
       menuRef.value && 
@@ -24,14 +26,29 @@ const handleClickOutside = (event) => {
   }
 }
 
-// Ajouter l'écouteur de clic global quand le composant est monté
-onMounted(() => {
+const fetchUserRole = async () => {
+  if (user.value) {
+    const { data: profile, error } = await client
+      .from('user_informations')
+      .select('role')
+      .eq('id', user.value.id)
+      .single()
+    if (!error && profile) {
+      userRole.value = profile.role
+    }
+  } else {
+    userRole.value = null
+  }
+}
+
+onMounted(async () => {
+  fetchUserRole()
   document.addEventListener('click', handleClickOutside)
+  document.removeEventListener('click', handleClickOutside)
 })
 
-// Supprimer l'écouteur quand le composant est démonté
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
+watch(user, () => {
+  fetchUserRole()
 })
 </script>
 
@@ -39,9 +56,11 @@ onUnmounted(() => {
   <header class="bg-white shadow-md">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 h-16">
       <!-- Logo Nuxt -->
-      <NuxtLink to="/" class="flex items-center gap-2">
-      <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-2 ">
-      </NuxtLink>
+       <div class="w-20">
+        <NuxtLink to="/" class="w-full">
+          <img src="/logo.svg" alt="Logo" class="object-fill h-16 w-full pt-2 ">
+        </NuxtLink>
+      </div>
 
       <!-- Menu principal -->
       <nav class="font-Lato flex items-center gap-6 text-sm text-gray-700">
@@ -74,11 +93,15 @@ onUnmounted(() => {
               @click="showMenu = false"
             >Profil</NuxtLink>
 
-            <NuxtLink to="/admin" class="block px-4 py-2 hover:bg-gray-100">Administration</NuxtLink>
+            <NuxtLink
+              v-if="userRole && userRole !== 'client'"
+              to="/owner"
+              class="block px-4 py-2 hover:bg-gray-100"
+            >Administration</NuxtLink>
 
             <button
               v-if="user"
-              @click="signOut().then(() => router.push('/'))"
+              @click="signOut().then(() => router.push('/offers'))"
               class="w-full text-left px-4 py-2 hover:bg-gray-100"
             >Déconnexion</button>
 

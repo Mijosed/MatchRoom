@@ -33,10 +33,6 @@ import {
 } from '@/components/ui/tabs'
 import { toast } from "@/components/ui/toast"
 
-definePageMeta({
-    layout: 'admin'
-})
-
 const client = useSupabaseClient()
 const { data: hotelsData, pending: loadingHotels, refresh } = await useAsyncData('hotels-admin', fetchHotels)
 const hotels = computed(() => hotelsData.value || [])
