@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     },
   },
 
-
   build: {
     transpile: ["@supabase/ssr", "cookie"],
   },
@@ -43,7 +42,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    stripeSecretKey: process.env.NUXT_STRIPE_SECRET_KEY,
+
     public: {
+      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
       supabase: {
         redirect: false,
       },
@@ -54,4 +56,6 @@ export default defineNuxtConfig({
     prefix: "",
     componentDir: "./components/ui",
   },
+
+  
 });
