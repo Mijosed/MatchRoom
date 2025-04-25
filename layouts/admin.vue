@@ -69,7 +69,7 @@ const backToSite = () => {
             <!-- Logo -->
             <div class="flex items-center p-4 border-b">
                 <NuxtLink to="/admin" class="flex items-center gap-2 font-semibold text-xl">
-                    <img src="/logo.png" alt="Logo" class="w-16 h-16">
+                    <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-2">
                     <span class="text-bleu font-bold">MatchRoom Admin</span>
                 </NuxtLink>
             </div>

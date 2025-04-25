@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
       <!-- Logo & description -->
       <div>
-        <img src="/logo.png" alt="Logo" class="w-16 h-16">
+        <img src="/logo.svg" alt="Logo" class="w-16 h-16">
         <p>Découvrez les meilleures offres d'hôtels selon la saison, vos envies et votre localisation.</p>
       </div>
 
