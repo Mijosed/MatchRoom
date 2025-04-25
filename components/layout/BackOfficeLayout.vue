@@ -208,7 +208,7 @@ const openStates = reactive<Record<string, boolean>>({})
     </Sheet>
 
     <!-- Contenu principal -->
-    <div class="flex flex-col sm:pl-64">
+    <div class="flex flex-col sm:pl-64 w-full">
         <main class="flex-1 p-4 sm:px-6 sm:py-4">
             <slot />
         </main>
