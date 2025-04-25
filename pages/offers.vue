@@ -6,7 +6,12 @@ import Footer from '~/components/common/Footer.vue'
 import CurrentTrends from '~/components/common/CurrentTrends.vue'
 import NearbyEvents from '~/components/common/NearbyEvents.vue'
 import SearchBar from '~/components/common/SearchBar.vue'
-const { hotels } = useHotels()
+const { hotels, loadInitialHotels } = useHotels()
+
+// Charger les hôtels lors de l'initialisation de la page
+onMounted(() => {
+  loadInitialHotels()
+})
 </script>
 
 <template>
