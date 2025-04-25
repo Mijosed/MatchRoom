@@ -6,7 +6,6 @@ const props = defineProps({
   }
 })
 
-
 const isFavorite = ref(false)
 
 const toggleFavorite = () => {
@@ -15,8 +14,11 @@ const toggleFavorite = () => {
 </script>
 
 <template>
-  <div class="bg-blanc rounded-xl shadow hover:shadow-md transition overflow-hidden relative">
-    <!-- Image + coeur -->
+  <NuxtLink
+    :to="`/hotels/${hotel.id}`"
+    class="block bg-blanc rounded-xl shadow hover:shadow-md transition overflow-hidden relative"
+  >
+    <!-- Image + Coeur -->
     <div class="relative">
       <img
         :src="hotel.photo"
@@ -24,8 +26,8 @@ const toggleFavorite = () => {
         class="w-full h-48 object-cover"
       />
       <button
-        @click.stop="toggleFavorite"
-        class="absolute top-2 right-2 p-1 rounded-full text-bleu hover:scale-110 transition"
+        @click.stop.prevent="toggleFavorite"
+        class="absolute top-2 right-2 p-1 rounded-full text-bleu bg-white bg-opacity-80 hover:bg-opacity-100 transition"
       >
         <Icon
           :name="isFavorite ? 'mdi:heart' : 'mdi:heart-outline'"
@@ -34,23 +36,10 @@ const toggleFavorite = () => {
       </button>
     </div>
 
-    <!-- Contenu -->
+    <!-- Infos hôtel -->
     <div class="p-4 space-y-1">
       <div class="text-sm text-noir">{{ hotel.address }}</div>
       <h3 class="text-lg font-semibold truncate text-noir">{{ hotel.name }}</h3>
-
-      <!-- Ligne prix + bouton -->
-      <div class="flex items-center justify-between text-sm text-noir mt-1">
-        <span>
-          À partir de <span class="font-bold text-orange">100 €</span> / nuit
-        </span>
-        <NuxtLink
-          :to="`/hotels/${hotel.id}`"
-          class="text-sm bg-bleu text-white px-3 py-1 rounded-full hover:bg-opacity-90 transition"
-        >
-          Négocier
-        </NuxtLink>
-      </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>

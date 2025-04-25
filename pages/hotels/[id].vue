@@ -1,83 +1,88 @@
 <script setup>
-const route = useRoute()
-const hotelId = route.params.id
-import NegotiationSlider from '~/components/common/NegotiationSlider.vue'
-import SuggestionsSection from '~/components/hotels/SuggestionsSection.vue'
-const proposedPrice = ref(120)
-const newReview = ref('')
-const newRating = ref(5)
+const route = useRoute();
+const hotelId = route.params.id;
+import SuggestionsSection from "~/components/hotels/SuggestionsSection.vue";
+const proposedPrice = ref(120);
+const newReview = ref("");
+const newRating = ref(5);
 const hotel = {
   id: hotelId,
   name: "Hôtel du Lac",
   city: "Annecy",
   maxGuests: 4,
-  description: "Chambre moderne avec vue sur le lac, literie haut de gamme, ambiance relaxante.",
+  description:
+    "Un hôtel 3 étoiles au charme discretNiché au cœur de la ville, notre hôtel allie élégance classique et confort moderne. Dans une atmosphère chaleureuse et paisible, chaque chambre offre un cocon raffiné pour une escapade urbaine tout en douceur.",
   image: "https://picsum.photos/id/1036/1000/600",
-  equipment: [
-    { icon: "mdi:bed", label: "1 lit" },
-    { icon: "mdi:shower", label: "1 salle de bain" },
-    { icon: "mdi:binoculars", label: "Vue mer" },
-    { icon: "mdi:headphones", label: "Insonorisation" },
-    { icon: "mdi:air-conditioner", label: "Climatisation" },
-  ],
+  // equipment: [
+  //   { icon: "mdi:bed", label: "1 lit" },
+  //   { icon: "mdi:shower", label: "1 salle de bain" },
+  //   { icon: "mdi:binoculars", label: "Vue mer" },
+  //   { icon: "mdi:headphones", label: "Insonorisation" },
+  //   { icon: "mdi:air-conditioner", label: "Climatisation" },
+  // ],
   services: [
     { icon: "mdi:glass-cocktail", label: "bar" },
     { icon: "mdi:silverware-fork-knife", label: "restauration" },
     { icon: "mdi:pool", label: "piscine" },
     { icon: "mdi:air-conditioner", label: "Climatisation" },
-    { icon: "mdi:coffee-maker", label: "Petit déjeuner" }
+    { icon: "mdi:coffee-maker", label: "Petit déjeuner" },
   ],
   infos: [
     { icon: "mdi:clock-outline", label: "Check-in 15h - Check-out 12h" },
     { icon: "mdi:calendar-remove-outline", label: "Annulation flexible" },
     { icon: "mdi:wheelchair-accessibility", label: "Accessible aux PMR" },
-    { icon: "mdi:paw", label: "Petfriendly" }
+    { icon: "mdi:paw", label: "Petfriendly" },
   ],
   reviews: [
     {
       user: "Marie Dupont",
       comment: "Super séjour, très belle vue et lit confortable !",
-      rating: 5
+      rating: 5,
+      photo: "https://randomuser.me/api/portraits/men/10.jpg"
+
     },
     {
       user: "Jean Martin",
       comment: "Personnel accueillant, bon petit déjeuner.",
-      rating: 4
+      rating: 4,
+      photo: "https://randomuser.me/api/portraits/men/11.jpg"
     },
     {
       user: "Sophie Durand",
       comment: "Chambre propre mais un peu bruyante.",
-      rating: 3
+      rating: 3,
+      photo: "https://randomuser.me/api/portraits/women/10.jpg"
     },
     {
       user: "Lucas Bernard",
       comment: "Pas mal, mais le prix est un peu élevé.",
-      rating: 3
+      rating: 3,
+      photo: "https://randomuser.me/api/portraits/women/11.jpg"
     },
-  ]
-}
+  ],
+};
 
 const handleNegotiation = (price) => {
-  console.log('Prix proposé :', price)
-}
+  console.log("Prix proposé :", price);
+};
 
 const handleReviewSubmit = () => {
   if (newReview.value.trim()) {
     hotel.reviews.push({
-      user: 'Utilisateur anonyme',
+      user: "Utilisateur anonyme",
       comment: newReview.value,
-      rating: newRating.value
-    })
-    newReview.value = ''
-    newRating.value = 5
+      rating: newRating.value,
+    });
+    newReview.value = "";
+    newRating.value = 5;
   }
-}
+};
 
-const isFavorite = ref(false)
+const isFavorite = ref(false);
 const toggleFavorite = () => {
-  isFavorite.value = !isFavorite.value
-}
-const router = useRouter()
+  isFavorite.value = !isFavorite.value;
+};
+const router = useRouter();
 </script>
 
 <template>
@@ -99,12 +104,17 @@ const router = useRouter()
 
       <button
         @click="toggleFavorite"
-        class="absolute top-4 right-4  p-2 rounded-full hover:bg-opacity-100 transition"
+        class="absolute top-4 right-4 p-2 rounded-full hover:bg-opacity-100 transition"
       >
-        <Icon :name="isFavorite ? 'mdi:heart' : 'mdi:heart-outline'" class="text-bleu w-6 h-6" />
+        <Icon
+          :name="isFavorite ? 'mdi:heart' : 'mdi:heart-outline'"
+          class="text-bleu w-6 h-6"
+        />
       </button>
 
-      <div class="absolute bottom-4 left-4 text-white bg-black/50 px-4 py-2 rounded-xl backdrop-blur-sm">
+      <div
+        class="absolute bottom-4 left-4 text-white bg-black/50 px-4 py-2 rounded-xl backdrop-blur-sm"
+      >
         <h1 class="text-xl sm:text-2xl font-bold">{{ hotel.name }}</h1>
         <p class="text-sm sm:text-base text-gray-200">{{ hotel.city }}</p>
       </div>
@@ -120,7 +130,7 @@ const router = useRouter()
       </p>
 
       <!-- Équipements principaux -->
-      <div>
+      <!-- <div>
                 <h2 class="text-base font-semibold mb-2">Equipements</h2>
 
         <div class="grid grid-cols-2 gap-x-6 gap-y-4">
@@ -133,7 +143,7 @@ const router = useRouter()
             <span>{{ item.label }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Équipements et services -->
       <div>
@@ -200,47 +210,46 @@ const router = useRouter()
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div
-    v-for="(review, i) in hotel.reviews"
-    :key="i"
-    class="flex bg-gray-100 rounded-lg p-4 items-start gap-4 shadow-sm"
-  >
-    <!-- Avatar -->
-    <img
-      :src="`https://i.pravatar.cc/150?img=${i + 10}`"
-      alt="avatar"
-      class="w-14 h-14 rounded-full object-cover"
-    />
+        <div>
+  <h2 class="text-lg font-semibold mb-4 text-bleu">Avis clients</h2>
 
-    <!-- Contenu -->
-    <div>
-      <p class="font-semibold text-[#333333]">{{ review.user }}</p>
-      <div class="flex gap-1 mb-1">
-        <Icon
-          v-for="n in 5"
-          :key="n"
-          :name="n <= review.rating ? 'mdi:star' : 'mdi:star-outline'"
-          class="text-yellow-400 w-4 h-4"
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div
+      v-for="(review, i) in hotel.reviews"
+      :key="i"
+      class="flex bg-gray-100 rounded-xl shadow overflow-hidden"
+    >
+      <!-- Avatar : sans padding ni arrondi -->
+      <div class="w-28 h-full shrink-0">
+        <img
+          :src="review.photo"
+          alt="avatar"
+          class="w-full h-full object-cover"
         />
       </div>
-      <p class="text-sm text-gray-700 leading-snug line-clamp-2">
-        "{{ review.comment }}"
-      </p>
+
+      <!-- Contenu texte -->
+      <div class="p-4 flex flex-col justify-center">
+        <p class="font-semibold text-noir mb-1">{{ review.user }}</p>
+        <div class="flex gap-1 mb-1">
+          <Icon
+            v-for="n in 5"
+            :key="n"
+            :name="n <= review.rating ? 'mdi:star' : 'mdi:star-outline'"
+            class="text-yellow-400 w-4 h-4"
+          />
+        </div>
+        <p class="text-sm text-gray-700 leading-snug line-clamp-2">
+          "{{ review.comment }}"
+        </p>
+      </div>
     </div>
   </div>
 </div>
-      <SuggestionsSection />
 
+
+        <SuggestionsSection />
       </div>
     </div>
-
-    <!-- Slider fixe -->
-    <NegotiationSlider
-      v-model="proposedPrice"
-      :min="80"
-      :max="150"
-      @submit="handleNegotiation"
-    />
   </div>
 </template>
