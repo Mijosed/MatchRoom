@@ -14,7 +14,8 @@ import {
     ChevronDown,
     ChevronRight,
     LogOut,
-    ArrowLeftToLine
+    ArrowLeftToLine,
+    Calendar
 } from 'lucide-vue-next'
 
 import { Button } from '@/components/ui/button'
@@ -115,6 +116,12 @@ const backToSite = () => {
                         <NuxtLink to="/admin/seuil" class="flex items-center rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground">
                             <Gauge class="h-4 w-4 mr-2" />
                             <span>Seuils</span>
+                        </NuxtLink>
+
+                        <!-- Saisonalité -->
+                        <NuxtLink to="/admin/saisonalite" class="flex items-center rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground">
+                            <Calendar class="h-4 w-4 mr-2" />
+                            <span>Saisonalité</span>
                         </NuxtLink>
                     </nav>
                 </div>

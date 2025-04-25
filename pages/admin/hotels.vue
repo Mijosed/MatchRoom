@@ -50,7 +50,8 @@ const newHotel = ref({
     phone: '',
     email: '',
     description: '',
-    tags: ''
+    tags: '',
+    photo: ''
 })
 const isSubmitting = ref(false)
 
@@ -99,7 +100,8 @@ function resetForm() {
         phone: '',
         email: '',
         description: '',
-        tags: ''
+        tags: '',
+        photo: ''
     }
 }
 
@@ -127,7 +129,8 @@ async function submitNewHotel() {
                 phone: newHotel.value.phone,
                 email: newHotel.value.email,
                 description: newHotel.value.description,
-                tags: formattedTags // Utilisation des tags formatés
+                tags: formattedTags, // Utilisation des tags formatés
+                photo: newHotel.value.photo
             }
         ])
 
@@ -234,6 +237,16 @@ async function submitNewHotel() {
                                 placeholder="luxe, spa, piscine"
                             />
                         </div>
+
+                        <div class="space-y-2">
+                            <Label for="hotel-photo">Photo (URL)</Label>
+                            <Input 
+                                id="hotel-photo" 
+                                v-model="newHotel.photo" 
+                                placeholder="https://exemple.com/photo.jpg"
+                                type="url"
+                            />
+                        </div>
                     
                         <DialogFooter>
                             <Button @click="showAddDialog = false" type="button" variant="outline" :disabled="isSubmitting">
@@ -281,6 +294,7 @@ async function submitNewHotel() {
                 <Table v-else>
                     <TableHeader>
                         <TableRow>
+                            <TableHead>Photo</TableHead>
                             <TableHead>Nom</TableHead>
                             <TableHead>Adresse</TableHead>
                             <TableHead>Contact</TableHead>
@@ -290,6 +304,14 @@ async function submitNewHotel() {
                     </TableHeader>
                     <TableBody>
                         <TableRow v-for="hotel in filteredHotels" :key="hotel.id">
+                            <TableCell>
+                                <div class="w-12 h-12 rounded overflow-hidden">
+                                    <img v-if="hotel.photo" :src="hotel.photo" alt="Photo" class="w-full h-full object-cover" />
+                                    <div v-else class="w-full h-full bg-muted flex items-center justify-center">
+                                        <File class="h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                </div>
+                            </TableCell>
                             <TableCell class="font-medium">{{ hotel.name }}</TableCell>
                             <TableCell>{{ hotel.address }}</TableCell>
                             <TableCell>
