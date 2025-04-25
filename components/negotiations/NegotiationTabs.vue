@@ -12,7 +12,7 @@ const selectTab = (tab) => {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex gap-2 mb-4">
     <button
       v-for="tab in tabs"
       :key="tab"
