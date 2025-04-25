@@ -8,7 +8,6 @@ const props = defineProps({
 
 const emit = defineEmits(['remove'])
 
-// Toujours favori initialement
 const isFavorite = ref(true)
 
 const toggleFavorite = () => {

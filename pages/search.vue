@@ -9,7 +9,6 @@
         class="w-full h-full"
       />
       
-      <!-- Overlay de recherche -->
       <div class="absolute top-4 left-4 right-4 z-10">
         <div class="bg-white rounded-full shadow-lg p-2 flex items-center gap-4 flex-wrap">
           <div class="flex-1 flex items-center gap-2 px-4">
@@ -30,7 +29,7 @@
       
     </div>
 
-    <!-- Résultats -->
+    
     <div class="container mx-auto px-4 py-6">
       <div v-if="loading" class="text-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -80,7 +79,6 @@ const { search } = useSearch()
 const loading = ref(true)
 const results = ref([])
 
-// Formater la plage de dates
 const formatDateRange = (startDate, endDate) => {
   if (!startDate || !endDate) return ''
   const start = new Date(startDate)
@@ -88,7 +86,6 @@ const formatDateRange = (startDate, endDate) => {
   return `${start.getDate()} avr. - ${end.getDate()} avr.`
 }
 
-// Formater le nombre de voyageurs
 const formatTravelers = () => {
   const total = Number(route.query.adults) + Number(route.query.children) + Number(route.query.babies)
   return `${total}`

@@ -45,7 +45,6 @@ onMounted(async () => {
 async function loadUserHotel() {
   console.log('Chargement des informations de l\'hôtel de l\'utilisateur...')
   try {
-    // Récupérer l'utilisateur actuel
     const { data: { user } } = await client.auth.getUser()
     
     if (!user) {
@@ -55,7 +54,6 @@ async function loadUserHotel() {
     
     console.log('Utilisateur connecté:', user.id)
     
-    // Récupérer les infos de l'utilisateur avec une requête filtrée par id
     const { data, error } = await client.from('user_informations')
       .select('id_hotel')
       .eq('id', user.id)
@@ -101,7 +99,6 @@ async function loadthreshold() {
       updatedThreshold.value = { ...data }
       console.log('Seuils chargés:', threshold.value)
     } else {
-      // Initialize with default values when no threshold exist
       updatedThreshold.value = {
         id_hotel: userHotelId.value,
         accept_threshold: 80,

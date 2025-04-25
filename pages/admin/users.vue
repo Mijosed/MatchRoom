@@ -32,19 +32,15 @@ definePageMeta({
 const client = useSupabaseClient()
 const searchQuery = ref('')
 
-// Récupération des utilisateurs via l'API (comme dans index.vue)
 const { data: rawUsersData, pending: loadingUsers, refresh } = await useAsyncData('admin-users', () =>
     $fetch('/api/admin/users')
 )
 
-// Récupération des hôtels
 const { data: hotelsData } = await useAsyncData('hotels-list', fetchHotels)
 const hotels = computed(() => hotelsData.value || [])
 
-// État pour les utilisateurs enrichis
 const users = ref([])
 
-// Surveiller les changements de données brutes pour enrichir les utilisateurs
 watchEffect(() => {
     if (!rawUsersData.value) return
     enrichUsersWithHotelInfo(rawUsersData.value).then((enriched) => {
@@ -52,7 +48,6 @@ watchEffect(() => {
     })
 })
 
-// Filtrer les utilisateurs en fonction de la recherche
 const filteredUsers = computed(() => {
     if (!searchQuery.value) return users.value
     
@@ -73,7 +68,6 @@ async function fetchHotels() {
 }
 
 async function enrichUsersWithHotelInfo(userList) {
-    // Récupérer les informations utilisateur
     const { data: userInfo, error: userInfoError } = await client
         .from('user_informations')
         .select('*')
@@ -83,7 +77,6 @@ async function enrichUsersWithHotelInfo(userList) {
         return userList
     }
     
-    // Enrichir les utilisateurs avec les informations supplémentaires
     return userList.map(user => {
         const info = userInfo?.find(info => info.id === user.id) || {}
         const hotelId = info.id_hotel
@@ -101,7 +94,6 @@ async function enrichUsersWithHotelInfo(userList) {
 async function deleteUser(id) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
         try {
-            // Supprimer les informations de l'utilisateur
             const { error: infoError } = await client
                 .from('user_informations')
                 .delete()
@@ -112,7 +104,6 @@ async function deleteUser(id) {
                 throw infoError
             }
             
-            // Vous pouvez ajouter ici une API pour supprimer l'utilisateur de auth si nécessaire
             
             alert('Les informations de l\'utilisateur ont été supprimées.')
             refresh()
@@ -124,7 +115,6 @@ async function deleteUser(id) {
 }
 
 function editUser(id) {
-    // À implémenter: redirection vers la page d'édition
     alert('Fonctionnalité d\'édition à implémenter.')
 }
 </script>

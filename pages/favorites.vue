@@ -10,7 +10,6 @@ const user = useSupabaseUser()
 const showAuthModal = ref(false)
 const isLoading = ref(true)
 
-// Données d'exemple pour les hôtels favoris
 const favoriteHotels = ref([
   {
     id: 1,
@@ -38,13 +37,11 @@ const favoriteHotels = ref([
   },
 ])
 
-// Fonction pour supprimer un hôtel des favoris
 const removeFavorite = (hotelId) => {
   favoriteHotels.value = favoriteHotels.value.filter(hotel => hotel.id !== hotelId)
 }
 
 onMounted(() => {
-  // Petit délai pour laisser le temps au user d'être récupéré
   setTimeout(() => {
     showAuthModal.value = !user.value
     isLoading.value = false
@@ -92,7 +89,6 @@ const closeAuthModal = () => {
       </div>
     </div>
     
-    <!-- Modal de connexion requise -->
     <AuthRequired 
       :show="showAuthModal" 
       @close="closeAuthModal"
