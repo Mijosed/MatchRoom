@@ -2,7 +2,7 @@
 const route = useRoute()
 const hotelId = route.params.id
 import NegotiationSlider from '~/components/common/NegotiationSlider.vue'
-
+import SuggestionsSection from '~/components/hotels/SuggestionsSection.vue'
 const proposedPrice = ref(120)
 const newReview = ref('')
 const newRating = ref(5)
@@ -43,7 +43,17 @@ const hotel = {
       user: "Jean Martin",
       comment: "Personnel accueillant, bon petit déjeuner.",
       rating: 4
-    }
+    },
+    {
+      user: "Sophie Durand",
+      comment: "Chambre propre mais un peu bruyante.",
+      rating: 3
+    },
+    {
+      user: "Lucas Bernard",
+      comment: "Pas mal, mais le prix est un peu élevé.",
+      rating: 3
+    },
   ]
 }
 
@@ -111,6 +121,8 @@ const router = useRouter()
 
       <!-- Équipements principaux -->
       <div>
+                <h2 class="text-base font-semibold mb-2">Equipements</h2>
+
         <div class="grid grid-cols-2 gap-x-6 gap-y-4">
           <div
             v-for="(item, i) in hotel.equipment"
@@ -125,7 +137,7 @@ const router = useRouter()
 
       <!-- Équipements et services -->
       <div>
-        <h2 class="text-base font-semibold mb-2">Equipements et services</h2>
+        <h2 class="text-base font-semibold mb-2">Services</h2>
         <div class="grid grid-cols-2 gap-x-6 gap-y-4">
           <div
             v-for="(item, i) in hotel.services"
@@ -188,26 +200,38 @@ const router = useRouter()
           </div>
         </div>
 
-        <div class="space-y-4">
-          <div
-            v-for="(review, i) in hotel.reviews"
-            :key="i"
-            class="border p-4 rounded-lg bg-gray-50"
-          >
-            <div class="flex justify-between items-center mb-1">
-              <span class="font-medium text-sm">{{ review.user }}</span>
-              <div class="flex gap-1">
-                <Icon
-                  v-for="n in review.rating"
-                  :key="n"
-                  name="mdi:star"
-                  class="text-yellow-400 w-4 h-4"
-                />
-              </div>
-            </div>
-            <p class="text-sm text-gray-700">{{ review.comment }}</p>
-          </div>
-        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div
+    v-for="(review, i) in hotel.reviews"
+    :key="i"
+    class="flex bg-gray-100 rounded-lg p-4 items-start gap-4 shadow-sm"
+  >
+    <!-- Avatar -->
+    <img
+      :src="`https://i.pravatar.cc/150?img=${i + 10}`"
+      alt="avatar"
+      class="w-14 h-14 rounded-full object-cover"
+    />
+
+    <!-- Contenu -->
+    <div>
+      <p class="font-semibold text-[#333333]">{{ review.user }}</p>
+      <div class="flex gap-1 mb-1">
+        <Icon
+          v-for="n in 5"
+          :key="n"
+          :name="n <= review.rating ? 'mdi:star' : 'mdi:star-outline'"
+          class="text-yellow-400 w-4 h-4"
+        />
+      </div>
+      <p class="text-sm text-gray-700 leading-snug line-clamp-2">
+        "{{ review.comment }}"
+      </p>
+    </div>
+  </div>
+</div>
+      <SuggestionsSection />
+
       </div>
     </div>
 
