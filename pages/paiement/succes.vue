@@ -16,7 +16,6 @@ const route = useRoute()
 onMounted(() => {
   const sessionId = route.query.session_id
   if (sessionId) {
-    // Vous pouvez utiliser sessionId pour vérifier ou enregistrer la transaction
     console.log('Session Stripe ID:', sessionId)
   }
 })

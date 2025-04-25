@@ -16,7 +16,6 @@ const toggleFavorite = () => {
 
 <template>
   <div class="bg-blanc rounded-xl shadow hover:shadow-md transition overflow-hidden relative">
-    <!-- Image + coeur -->
     <div class="relative">
       <img
         :src="hotel.photo"
@@ -34,12 +33,10 @@ const toggleFavorite = () => {
       </button>
     </div>
 
-    <!-- Contenu -->
     <div class="p-4 space-y-1">
       <div class="text-sm text-noir">{{ hotel.address }}</div>
       <h3 class="text-lg font-semibold truncate text-noir">{{ hotel.name }}</h3>
 
-      <!-- Ligne prix + bouton -->
       <div class="flex items-center justify-between text-sm text-noir mt-1">
         <span>
           À partir de <span class="font-bold text-orange">100 €</span> / nuit

@@ -49,7 +49,6 @@ const payer = async (offer) => {
       'bg-gray-100 opacity-60': offer.status === 'Perdues' || (offer.status === 'Validée' && offer.is_paid)
     }"
   >
-    <!-- Badge statut (en haut à gauche) -->
     <div class="absolute top-2 left-2 text-xs px-2 py-1 rounded-full font-semibold text-white"
       :class="{
         'bg-orange-500': offer.status === 'En cours' && !offer.counter_offer,
@@ -70,7 +69,6 @@ const payer = async (offer) => {
       }}
     </div>
 
-    <!-- Contenu principal -->
     <div class="flex gap-4 p-3 pt-6">
       <img
         :src="offer.image"
@@ -90,7 +88,6 @@ const payer = async (offer) => {
           <Icon name="mdi:account-group" class="w-4 h-4" /> {{ offer.people }} personnes
         </div>
 
-        <!-- Contre-offre -->
         <div v-if="offer.status === 'En cours'" class="text-sm mt-1 font-medium">
           <template v-if="offer.waiting_hotelier">
             <span class="text-orange-600">En attente de validation de l’hôtelier</span>
@@ -114,7 +111,6 @@ const payer = async (offer) => {
       </div>
     </div>
 
-    <!-- Footer : prix + paiement -->
     <div class="flex justify-between items-center px-4 py-2 bg-gray-100">
       <span class="text-sm text-gray-700 font-medium">
         Offre à <span class="text-noir">{{ offer.price }}</span>
@@ -128,7 +124,6 @@ const payer = async (offer) => {
       </button>
     </div>
 
-    <!-- Bandeau d'urgence -->
     <div
       class="text-white text-center text-xs py-1 font-medium"
       :class="{

@@ -42,7 +42,6 @@ const { data: hotelsData, pending: loadingHotels, refresh } = await useAsyncData
 const hotels = computed(() => hotelsData.value || [])
 const searchQuery = ref('')
 
-// État du formulaire d'ajout
 const showAddDialog = ref(false)
 const newHotel = ref({
     name: '',
@@ -55,7 +54,6 @@ const newHotel = ref({
 })
 const isSubmitting = ref(false)
 
-// Filtrer les hôtels en fonction de la recherche
 const filteredHotels = computed(() => {
     if (!searchQuery.value) return hotels.value
     
@@ -89,7 +87,6 @@ async function deleteHotel(id) {
 }
 
 function editHotel(id) {
-    // Rediriger vers la page d'édition
     navigateTo(`/admin/hotels/${id}/edit`)
 }
 
@@ -114,10 +111,8 @@ async function submitNewHotel() {
     isSubmitting.value = true
 
     try {
-        // Formatage des tags au format tableau PostgreSQL
         let formattedTags = null
         if (newHotel.value.tags && newHotel.value.tags.trim()) {
-            // Transformation de "tag1, tag2, tag3" en format tableau PostgreSQL "{tag1,tag2,tag3}"
             const tagsArray = newHotel.value.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
             formattedTags = `{${tagsArray.join(',')}}`
         }
@@ -129,21 +124,18 @@ async function submitNewHotel() {
                 phone: newHotel.value.phone,
                 email: newHotel.value.email,
                 description: newHotel.value.description,
-                tags: formattedTags, // Utilisation des tags formatés
+                tags: formattedTags,
                 photo: newHotel.value.photo
             }
         ])
 
         if (error) throw error
 
-        // Réinitialiser le formulaire et fermer le modal
         resetForm()
         showAddDialog.value = false
         
-        // Actualiser la liste
         refresh()
         
-        // Notification de succès
         alert('Hôtel ajouté avec succès')
     } catch (error) {
         console.error('Erreur lors de l\'ajout de l\'hôtel:', error)
@@ -159,7 +151,6 @@ async function submitNewHotel() {
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Gestion des hôtels</h1>
             
-            <!-- Dialog pour ajouter un hôtel -->
             <Dialog v-model:open="showAddDialog">
                 <DialogTrigger as-child>
                     <Button class="gap-2">

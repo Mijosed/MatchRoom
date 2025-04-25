@@ -32,7 +32,6 @@ const recommendations = [
   <section class="px-4 relative">
     <h2 class="text-bleu font-semibold mb-4">Recommandations par saison</h2>
 
-    <!-- Flèches -->
     <button
       @click="scroll('left')"
       class="hidden md:flex absolute left-0 top-[50%] -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100"

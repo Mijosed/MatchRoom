@@ -13,7 +13,6 @@ const toggleMenu = () => {
   showMenu.value = !showMenu.value
 }
 
-// Fonction pour gérer les clics en dehors du menu
 const handleClickOutside = (event) => {
   if (showMenu.value && 
       menuRef.value && 
@@ -24,12 +23,10 @@ const handleClickOutside = (event) => {
   }
 }
 
-// Ajouter l'écouteur de clic global quand le composant est monté
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 })
 
-// Supprimer l'écouteur quand le composant est démonté
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
@@ -38,19 +35,16 @@ onUnmounted(() => {
 <template>
   <header class="bg-white shadow-md">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 h-16">
-      <!-- Logo Nuxt -->
       <NuxtLink to="/" class="flex items-center gap-2">
       <img src="/logo.svg" alt="Logo" class="w-16 h-16 pt-4 ">
       </NuxtLink>
 
-      <!-- Menu principal -->
       <nav class="font-Lato flex items-center gap-6 text-sm text-gray-700">
         <NuxtLink to="/offers" class="hover:text-bleu">Nos offres</NuxtLink>
         <NuxtLink to="/favorites" class="hover:text-bleu">Favoris</NuxtLink>
         <NuxtLink to="/negotiations" class="hover:text-bleu">Négociations</NuxtLink>
         <NuxtLink to="/bookings" class="hover:text-bleu">Réservations</NuxtLink>
 
-        <!-- Menu utilisateur -->
         <div class="relative">
           <button 
             ref="buttonRef"
@@ -58,10 +52,8 @@ onUnmounted(() => {
             class="flex items-center gap-1 hover:text-bleu"
           >
             <Icon name="mdi:account-circle" class="w-5 h-5" />
-            <!-- <span>{{ user ? 'Mon compte' : 'Connexion' }}</span> -->
           </button>
 
-          <!-- Dropdown -->
           <div
             v-if="showMenu"
             ref="menuRef"
