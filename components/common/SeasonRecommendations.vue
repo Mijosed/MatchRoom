@@ -24,14 +24,13 @@ const recommendations = [
   { season: 'Automne', icon: 'mdi:cabin-a-frame', label: 'Cabane' },
 
   { season: 'Hiver', icon: 'mdi:snowflake', label: 'Ski' },
-  { season: 'Hiver', icon: 'mdi:home-fire', label: 'Chalet' },
   { season: 'Hiver', icon: 'mdi:spa-outline', label: 'Thermes' }
 ]
 </script>
 
 <template>
   <section class="px-4 relative">
-    <h2 class="text-xl font-semibold mb-4">Recommandations par saison</h2>
+    <h2 class="text-bleu font-semibold mb-4">Recommandations par saison</h2>
 
     <!-- Flèches -->
     <button
@@ -46,12 +45,12 @@ const recommendations = [
         <div
           v-for="(item, index) in recommendations"
           :key="index"
-          class="min-w-[100px] bg-white rounded-xl shadow text-center px-4 py-3 flex flex-col items-center justify-center hover:shadow-md transition"
+          class="min-w-[100px] bg-bleu rounded-xl text-center px-4 py-3 flex flex-col items-center justify-center hover:brightness-105 transition"
         >
-          <Icon :name="item.icon" class="text-black w-8 h-8 mb-2" />
-          <div class="text-sm text-gray-700">{{ item.label }}</div>
-          <div class="text-xs text-gray-400 italic">{{ item.season }}</div>
+          <Icon :name="item.icon" class="text-white w-7 h-7 mb-2" />
+          <div class="text-sm text-white font-semibold">{{ item.label }}</div>
         </div>
+
       </div>
     </div>
 

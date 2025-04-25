@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   components: true,
   css: ["~/assets/css/main.css"],
-
+  
   modules: [
     "@nuxtjs/supabase",
     "@nuxtjs/tailwindcss",
@@ -14,11 +14,14 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
+    "@nuxtjs/leaflet",
   ],
 
   googleFonts: {
     families: {
       Montserrat: true,
+      "Bricolage Grotesque": true,
+      Lato: true,
     },
   },
 
@@ -40,7 +43,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    stripeSecretKey: process.env.NUXT_STRIPE_SECRET_KEY,
+
     public: {
+      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
       supabase: {
         redirect: false,
       },
@@ -61,6 +67,21 @@ export default defineNuxtConfig({
           }
         }
       })
+    }
+  },
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+        }
+      ],
+      script: [
+        {
+          src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        }
+      ]
     }
   }
 });
