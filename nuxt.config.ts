@@ -57,6 +57,18 @@ export default defineNuxtConfig({
     prefix: "",
     componentDir: "./components/ui",
   },
+  hooks: {
+    'pages:extend'(pages) {
+      pages.forEach(page => {
+        if (page.path.startsWith('/admin')) {
+          page.meta = { 
+            ...(page.meta || {}), 
+            layout: 'admin' 
+          }
+        }
+      })
+    }
+  },
   app: {
     head: {
       link: [

@@ -7,7 +7,7 @@
         :key="i"
         class="flex flex-col items-center space-y-1 text-center"
       >
-        <Icon :name="badge.icon" class="w-8 h-8 text-black" />
+        <img :src="badge.svg" class="w-12 h-12" :alt="badge.label" />
         <span class="text-xs">{{ badge.label }}</span>
       </div>
     </div>
@@ -16,13 +16,14 @@
 
 <script setup>
 const badges = [
-    { icon: 'mdi:star-check', label: '5 réservations' },
-    { icon: 'mdi:calendar-clock', label: 'Plus de 1 semaine' },
-    { icon: 'mdi:flag', label: 'France' },
-    { icon: 'mdi:airplane', label: 'International' },
-    { icon: 'mdi:shield-check', label: 'Vérifié' },
-    { icon: 'mdi:account-star', label: 'Super hôte' },
-    { icon: 'mdi:home-heart', label: 'Hôte d\'exception' },
-    { icon: 'mdi:star-outline', label: 'Nouveau' },
+    { svg: '/badges/badge_adventure.svg', label: 'Aventure' },
+    { svg: '/badges/badge_continent.svg', label: 'Continent' },
+    { svg: '/badges/badge_amateur.svg', label: 'Amateur' },
+    { svg: '/badges/badge_avis.svg', label: 'Avis' },
+    { svg: '/badges/badge_courrier.svg', label: 'Courrier' },
+    { svg: '/badges/badge_negociateur.svg', label: 'Negociateur' },
+    { svg: '/badges/badge_photo.svg', label: 'Photo' },
+    { svg: '/badges/badge_solo.svg', label: 'Solo' },
+    { svg: '/badges/badge_pays.svg', label: 'Pays' },
 ]
 </script>

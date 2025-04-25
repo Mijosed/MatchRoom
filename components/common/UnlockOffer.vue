@@ -8,6 +8,7 @@ const sliderRef = ref(null)
 let animationFrame
 let startX = 0
 let lastX = 0
+const blurAmount = ref(8) // Valeur initiale du flou
 
 // Fonction pour faire vibrer l'appareil
 const vibrate = () => {
@@ -37,9 +38,13 @@ const startDrag = (e) => {
     
     const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1)
     progress.value = percent
+    
+    // Réduire progressivement le flou en fonction de la progression
+    blurAmount.value = Math.max(8 - (percent * 9), 0)
 
     if (percent >= unlockThreshold) {
       unlocked.value = true
+      blurAmount.value = 0 // Supprimer complètement le flou
       vibrate() 
       stopDrag()
     }
@@ -68,9 +73,11 @@ const animateBack = () => {
   const animate = () => {
     if (progress.value > initialProgress) {
       progress.value -= 0.05
+      blurAmount.value = Math.min(8, blurAmount.value + 0.3) // Rétablir le flou progressivement
       animationFrame = requestAnimationFrame(animate)
     } else {
       progress.value = initialProgress
+      blurAmount.value = 8 // Rétablir le flou complet
     }
   }
   animate()
@@ -79,19 +86,25 @@ const animateBack = () => {
 // Surveiller les changements de statut pour les animations
 watch(unlocked, (newValue) => {
   if (newValue) {
-    // Aucune animation nécessaire si déjà déverrouillé
+    // Animation de défloutage complet
+    blurAmount.value = 0
   }
 })
 </script>
 
 <template>
   <div class="relative h-72 rounded-xl overflow-hidden shadow-lg">
-    <!-- Background blur -->
+    <!-- Background blur avec transition -->
     <img
-      src="https://picsum.photos/id/1036/800/600"
-      class="absolute inset-0 w-full h-full object-cover blur-md scale-105"
+      src="/chambre.png"
+      class="absolute inset-0 w-full h-full object-cover scale-105 transition-all duration-300"
+      :class="unlocked ? '' : 'bg-opacity-90'"
+      :style="{ filter: `blur(${blurAmount}px)` }"
     />
-    <div class="absolute inset-0 bg-black bg-opacity-50" />
+    <div 
+      class="absolute inset-0 bg-black transition-opacity duration-300" 
+      :class="{ 'bg-opacity-50': !unlocked, 'bg-opacity-0': unlocked }"
+    />
 
     <!-- Content -->
     <div class="relative z-10 h-full w-full flex flex-col justify-center items-center text-white px-4">
@@ -118,8 +131,6 @@ watch(unlocked, (newValue) => {
     @touchstart.prevent="startDrag"
   >
     <transition name="flip" mode="out-in">
-      <span v-if="progress >= unlockThreshold" key="unlocked">🔓</span>
-      <span v-else key="locked">🔒</span>
     </transition>
   </div>
 </div>
@@ -127,8 +138,8 @@ watch(unlocked, (newValue) => {
       </template>
 
       <template v-else>
-        <h2 class="text-2xl font-bold mb-2">Offre du jour !</h2>
-        <p class="text-center text-sm">Hôtel Soleil à -30% à seulement 2km de votre position.</p>
+        <h2 class="text-3xl font-bold mb-2 text-shadow-xl">Offre du jour !</h2>
+        <p class="text-center text-md text-shadow-xl">Hôtel Cheval Blanc à -30% à seulement 2km de votre position.</p>
         <button class="mt-4 px-4 py-2 bg-bleu text-white rounded-full shadow">
           Réserver
         </button>
