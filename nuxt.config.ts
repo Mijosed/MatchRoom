@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
+    "@nuxtjs/leaflet",
   ],
 
   googleFonts: {
@@ -56,6 +57,19 @@ export default defineNuxtConfig({
     prefix: "",
     componentDir: "./components/ui",
   },
-
-  
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+        }
+      ],
+      script: [
+        {
+          src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        }
+      ]
+    }
+  }
 });

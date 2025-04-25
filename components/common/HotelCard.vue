@@ -1,10 +1,11 @@
 <script setup>
-defineProps({
+const props = defineProps({
   hotel: {
     type: Object,
     required: true
   }
 })
+
 
 const isFavorite = ref(false)
 
