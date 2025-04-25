@@ -5,10 +5,8 @@ import OfferCard from '~/components/common/OfferCard.vue'
 
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50">
-    <!-- Navigation principale -->
     <NavBarDesktop />
 
-    <!-- Contenu principal -->
     <main class="max-w-6xl mx-auto w-full px-4 mt-6 space-y-6">
       <slot />
     </main>

@@ -39,10 +39,8 @@ const events = [
             :alt="event.title"
             class="absolute inset-0 w-full h-full object-cover"
           />
-          <!-- Overlay noir -->
           <div class="absolute inset-0 bg-black bg-opacity-50" />
 
-          <!-- Contenu -->
           <div class="relative z-10 h-full w-full flex flex-col justify-end p-4 text-white">
             <h3 class="text-base font-semibold mb-1">{{ event.title }}</h3>
             <p class="text-xs text-gray-200 line-clamp-2">{{ event.description }}</p>

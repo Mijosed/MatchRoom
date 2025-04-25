@@ -67,7 +67,6 @@ const handleReset = async () => {
 onMounted(() => {
   client.auth.onAuthStateChange(async (event) => {
     if (event === 'PASSWORD_RECOVERY') {
-      // L'utilisateur est déjà authentifié, prêt à réinitialiser le mot de passe
     }
   })
 })
