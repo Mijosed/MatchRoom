@@ -1,8 +1,3 @@
-<template>
-    <!-- sidebar -->
-    <slot />
-</template>
-
 <script setup lang="ts">
 import {
     CircleUser,
