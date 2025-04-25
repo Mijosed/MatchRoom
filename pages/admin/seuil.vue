@@ -45,10 +45,22 @@ onMounted(async () => {
 async function loadUserHotel() {
   console.log('Chargement des informations de l\'hôtel de l\'utilisateur...')
   try {
-    // Récupérer toutes les informations pour vérifier la structure
-    const { data, error } = await client.from('user_informations').select('*')
+    // Récupérer l'utilisateur actuel
+    const { data: { user } } = await client.auth.getUser()
     
-    console.log('Données user_informations complètes:', data)
+    if (!user) {
+      console.log('Aucun utilisateur connecté')
+      return
+    }
+    
+    console.log('Utilisateur connecté:', user.id)
+    
+    // Récupérer les infos de l'utilisateur avec une requête filtrée par id
+    const { data, error } = await client.from('user_informations')
+      .select('id_hotel')
+      .eq('id', user.id)
+    
+    console.log('Données user_informations pour l\'utilisateur:', data)
     
     if (error) {
       console.error('Erreur lors de la récupération des informations:', error)
@@ -56,26 +68,15 @@ async function loadUserHotel() {
     }
     
     if (data && data.length > 0) {
-      console.log('Structure de la première ligne:', data[0])
-      console.log('Colonnes disponibles:', Object.keys(data[0]))
-      
-      // Vérifier quelle colonne est disponible
-      if ('hotel_id' in data[0]) {
-        userHotelId.value = data[0].hotel_id
-        console.log('Utilisation de hotel_id:', userHotelId.value)
-      } 
-      else if ('id_hotel' in data[0]) {
-        userHotelId.value = data[0].id_hotel
-        console.log('Utilisation de id_hotel:', userHotelId.value)
-      }
-      else {
-        console.log('Ni hotel_id ni id_hotel ne sont présents dans la table')
-      }
+      userHotelId.value = data[0].id_hotel
+      console.log('Utilisateur lié à l\'hôtel:', userHotelId.value)
     } else {
-      console.log('Aucune donnée trouvée dans user_informations')
+      console.log('Aucune information trouvée pour cet utilisateur ou aucun hôtel lié')
+      userHotelId.value = null
     }
   } catch (e) {
     console.error('Exception dans loadUserHotel:', e)
+    userHotelId.value = null
   }
 }
 
@@ -200,94 +201,106 @@ async function deletePeriod(id) {
   <div class="space-y-6">
     <h1 class="text-2xl font-bold">Seuils - Gestion</h1>
 
-    <div>
-      <h2 class="text-lg font-semibold">Seuil par défaut</h2>
-      <div class="space-y-2 max-w-xs">
-        <div>
-          <Label>Seuil d'acceptation (%)</Label>
-          <Input type="number" v-model="updatedThreshold.accept_threshold" min="0" max="100" />
+    <div v-if="!userHotelId" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4">
+      <div class="flex">
+        <div class="ml-3">
+          <p class="text-sm text-yellow-700">
+            Vous n'êtes associé à aucun hôtel. Pour gérer les seuils, veuillez contacter l'administrateur pour associer votre compte à un hôtel.
+          </p>
         </div>
-        <div>
-          <Label>Seuil de refus (%)</Label>
-          <Input type="number" v-model="updatedThreshold.reject_threshold" min="0" max="100" />
-        </div>
-        <Button class="mt-2" @click="updateDefaultThreshold">
-          {{ threshold.length ? 'Enregistrer les seuils' : 'Créer un seuil' }}
-        </Button>
-      </div>
-      <div v-if="!userHotelId" class="text-sm text-muted-foreground mt-2">
-        Vous devez être associé à un hôtel pour gérer les seuils.
       </div>
     </div>
 
-    <div>
-      <h2 class="text-lg font-semibold">Périodes spécifiques</h2>
-
-      <Dialog v-model:open="showDialog">
-        <DialogTrigger as-child>
-          <Button class="my-2">Ajouter une période</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Nouvelle période spécifique</DialogTitle>
-          </DialogHeader>
-
-          <div class="space-y-3">
-            <div>
-              <Label>Nom</Label>
-              <Input v-model="newPeriod.name" />
-            </div>
-            <div>
-              <Label>Début</Label>
-              <Input v-model="newPeriod.start_date" type="date" />
-            </div>
-            <div>
-              <Label>Fin</Label>
-              <Input v-model="newPeriod.end_date" type="date" />
-            </div>
-            <div>
-              <Label>Seuil Acceptation (%)</Label>
-              <Input v-model="newPeriod.accept_threshold" type="number" min="0" max="100" />
-            </div>
-            <div>
-              <Label>Seuil Refus (%)</Label>
-              <Input v-model="newPeriod.reject_threshold" type="number" min="0" max="100" />
-            </div>
+    <div v-else>
+      <div>
+        <h2 class="text-lg font-semibold">Seuil par défaut</h2>
+        <div class="space-y-2 max-w-xs">
+          <div>
+            <Label>Seuil d'acceptation (%)</Label>
+            <Input type="number" v-model="updatedThreshold.accept_threshold" min="0" max="100" />
           </div>
+          <div>
+            <Label>Seuil de refus (%)</Label>
+            <Input type="number" v-model="updatedThreshold.reject_threshold" min="0" max="100" />
+          </div>
+          <Button class="mt-2" @click="updateDefaultThreshold">
+            {{ threshold.length ? 'Enregistrer les seuils' : 'Créer un seuil' }}
+          </Button>
+        </div>
+      </div>
 
-          <DialogFooter class="mt-4">
-            <Button variant="outline" @click="showDialog = false">Annuler</Button>
-            <Button :disabled="isSubmitting" @click="savePeriod">Enregistrer</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <div>
+        <h2 class="text-lg font-semibold">Périodes spécifiques</h2>
 
-      <Table v-if="periods.length">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nom</TableHead>
-            <TableHead>Début</TableHead>
-            <TableHead>Fin</TableHead>
-            <TableHead>Acceptation</TableHead>
-            <TableHead>Refus</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="p in periods" :key="p.id">
-            <TableCell>{{ p.name }}</TableCell>
-            <TableCell>{{ p.start_date }}</TableCell>
-            <TableCell>{{ p.end_date }}</TableCell>
-            <TableCell>{{ p.accept_threshold }}%</TableCell>
-            <TableCell>{{ p.reject_threshold }}%</TableCell>
-            <TableCell>
-              <Button variant="destructive" size="sm" @click="deletePeriod(p.id)">Supprimer</Button>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+        <Dialog v-model:open="showDialog">
+          <DialogTrigger as-child>
+            <Button class="my-2">Ajouter une période</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Nouvelle période spécifique</DialogTitle>
+            </DialogHeader>
 
-      <div v-else class="text-muted">Aucune période spécifique définie.</div>
+            <div class="space-y-3">
+              <div>
+                <Label>Nom</Label>
+                <Input v-model="newPeriod.name" />
+              </div>
+              <div>
+                <Label>Début</Label>
+                <Input v-model="newPeriod.start_date" type="date" />
+              </div>
+              <div>
+                <Label>Fin</Label>
+                <Input v-model="newPeriod.end_date" type="date" />
+              </div>
+              <div>
+                <Label>Seuil Acceptation (%)</Label>
+                <Input v-model="newPeriod.accept_threshold" type="number" min="0" max="100" />
+              </div>
+              <div>
+                <Label>Seuil Refus (%)</Label>
+                <Input v-model="newPeriod.reject_threshold" type="number" min="0" max="100" />
+              </div>
+            </div>
+
+            <DialogFooter class="mt-4">
+              <Button variant="outline" @click="showDialog = false">Annuler</Button>
+              <Button :disabled="isSubmitting" @click="savePeriod">Enregistrer</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Table v-if="periods.length">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nom</TableHead>
+              <TableHead>Début</TableHead>
+              <TableHead>Fin</TableHead>
+              <TableHead>Acceptation</TableHead>
+              <TableHead>Refus</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="p in periods" :key="p.id">
+              <TableCell>{{ p.name }}</TableCell>
+              <TableCell>{{ p.start_date }}</TableCell>
+              <TableCell>{{ p.end_date }}</TableCell>
+              <TableCell>{{ p.accept_threshold }}%</TableCell>
+              <TableCell>{{ p.reject_threshold }}%</TableCell>
+              <TableCell>
+                <Button variant="destructive" size="sm" @click="deletePeriod(p.id)">Supprimer</Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+
+        <div v-else-if="!loading" class="text-muted">Aucune période spécifique définie.</div>
+        <div v-else class="text-center py-4">
+          <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
