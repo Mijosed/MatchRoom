@@ -21,6 +21,8 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
+definePageMeta({ layout: 'admin' })
+
 const client = useSupabaseClient()
 
 const { data: roomsData, pending: loadingRooms, refresh } = await useAsyncData('rooms-admin', fetchRooms)

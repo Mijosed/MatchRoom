@@ -25,6 +25,10 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
+definePageMeta({
+    layout: 'admin'
+})
+
 const client = useSupabaseClient()
 const searchQuery = ref('')
 
